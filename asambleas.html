@@ -47,7 +47,7 @@
   <div class="card">
     <h2>Próximas reuniones</h2>
     <div class="note-box">
-      〜 Este calendario es un <strong>borrador tentativo</strong> para lo que queda de 2026 — solo la <strong>Asamblea Extraordinaria del 12 de septiembre</strong> tiene fecha confirmada (marcada con ✓). Las demás fechas, y sus agendas, se van a ir ajustando; edítalas en <code>data/asambleas.csv</code> a medida que se confirmen.
+      〜 Este calendario es un <strong>borrador tentativo</strong> para lo que queda de 2026 — solo la <strong>Asamblea Extraordinaria del 12 de septiembre</strong> tiene fecha confirmada (marcada con ✓). Las demás fechas y sus agendas se van a ir ajustando conforme se confirmen.
     </div>
 
     <div class="type-tabs">
@@ -62,32 +62,11 @@
 
   <div class="card">
     <h2>➕ Proponer una reunión</h2>
-    <p>Cualquier socio puede proponer fecha y tema para una reunión — no necesitas tocar GitHub ni el CSV. Completa el formulario y el Secretario General la revisa y la agrega al calendario oficial.</p>
+    <p>Cualquier socio puede proponer fecha y tema para una reunión. Completa el formulario y notifícalo al Secretario, al Vicepresidente y al Presidente mediante WhatsApp. Ellos evaluarán agendarlo y lo comunicarán a todos los socios mediante esa vía.</p>
     <div id="propose-form-warning"></div>
     <p style="text-align:center; margin-top:18px;">
       <a class="btn gold" id="propose-meeting-btn" href="#" target="_blank">➕ Proponer una reunión</a>
     </p>
-
-    <details style="margin-top:20px;">
-      <summary style="cursor:pointer; color:var(--ink-dim); font-size:13px; font-weight:600;">Solo para el Secretario General: cómo pasa una propuesta al calendario oficial</summary>
-      <p style="margin-top:14px;">Las propuestas llegan a la hoja de respuestas del formulario. Para oficializar una, agrégala como fila nueva en <code>data/asambleas.csv</code> con este formato:</p>
-      <div class="table-wrapper">
-        <table>
-          <thead><tr><th>Columna</th><th>Qué poner</th></tr></thead>
-          <tbody>
-            <tr><td><code>id</code></td><td>Código corto único, ej. <code>T4</code>, <code>C4</code>, <code>A3</code></td></tr>
-            <tr><td><code>tipo</code></td><td><code>Ordinaria</code> / <code>Extraordinaria</code> / <code>Consejo Directivo</code> / <code>Reunión de Trabajo</code></td></tr>
-            <tr><td><code>modalidad</code></td><td><code>Presencial</code> / <code>Virtual</code> / <code>Híbrida</code></td></tr>
-            <tr><td><code>titulo</code>, <code>fecha</code>, <code>hora</code>, <code>lugar</code></td><td>Datos básicos de la sesión</td></tr>
-            <tr><td><code>convocatoria_dias</code></td><td>Días mínimos de aviso: 5 (Asamblea), 2 (Consejo), 0 (trabajo)</td></tr>
-            <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code> — déjalo vacío mientras la reunión sea tentativa</td></tr>
-            <tr><td><code>quorum_regla</code></td><td>Cita libre de la regla del estatuto aplicable</td></tr>
-            <tr><td><code>estado_fecha</code></td><td><code>Confirmada</code> o <code>Tentativa</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="dim">Criterio sugerido de modalidad: si la reunión requiere firma física, votación formal amplia o es la Asamblea Anual → mejor presencial. Coordinaciones ágiles de una Dirección → virtual casi siempre funciona mejor.</p>
-    </details>
   </div>
 
   <div class="card">

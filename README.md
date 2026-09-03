@@ -55,7 +55,7 @@ Un sitio estático en GitHub Pages no puede guardar respuestas de varias persona
 1. Crea un Google Form con: Nombre, Tipo de reunión (Asamblea / Consejo Directivo / Reunión de Trabajo), Modalidad, Fecha y hora propuestas, Lugar, Tema o motivo.
 2. Copia el enlace del formulario ("Enviar" → ícono de enlace).
 3. En `asambleas.html`, dentro del bloque `CONFIG`, pégalo en `PROPOSE_MEETING_FORM_URL`.
-4. El Secretario General revisa las respuestas (Google Forms las guarda automáticamente en una hoja de respuestas) y, para las que se confirman, agrega la fila correspondiente en `data/asambleas.csv` — ese paso sigue siendo manual, pero ya nadie más que el Secretario necesita tocar GitHub.
+4. Quien propone la reunión completa el formulario y avisa por WhatsApp al Secretario, al Vicepresidente y al Presidente. Ellos evalúan si se agenda y lo comunican a todos los socios por esa misma vía. Quien administra el sitio (tú) agrega la fila correspondiente en `data/asambleas.csv` una vez que la reunión queda confirmada.
 
 ### B) Formulario para confirmar asistencia (RSVP) + quórum en vivo
 
@@ -95,7 +95,25 @@ Esto no automatiza la carga a los `.csv` — sigue siendo un paso manual — per
 
 ## 5. Documentos
 
-Sube tus PDFs (estatuto, actas) a `docs/`. El estatuto firmado (`T0058555-signed.pdf`) ya viene incluido en este paquete.
+### Documentos constitutivos (estatuto, testimonio notarial)
+
+Sube esos PDFs a `docs/` en este repositorio. El estatuto firmado (`T0058555-signed.pdf`) ya viene incluido en este paquete. Esto lo maneja quien administra el sitio (tú) — no requiere que el Secretario toque GitHub.
+
+### Actas de Asamblea y Consejo Directivo — carpeta de Google Drive (para el Secretario General)
+
+El Secretario General no necesita saber usar GitHub ni CSV para archivar las actas. En vez de eso, `documentos.html` muestra una carpeta de Google Drive directamente en la página, donde él sube los PDFs arrastrándolos como a cualquier carpeta normal.
+
+**Cómo configurarla (5 minutos):**
+
+1. Crea una carpeta en tu Google Drive, por ejemplo "Actas Sidereus Nuncius".
+2. Click derecho → **Compartir → Acceso general**: cambia a **"Cualquier persona con el enlace"**, con permiso de **Editor** (para que el Secretario pueda subir archivos sin pedir acceso cada vez). Si prefieres más control, comparte la carpeta solo con el correo del Secretario como Editor.
+3. Copia el enlace de la carpeta — se ve así: `https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz`. La parte después de `/folders/` es el **ID de la carpeta**.
+4. En `documentos.html`, busca el bloque `CONFIG` y pega ese ID en `DRIVE_ACTAS_FOLDER_ID`.
+5. Listo — la página va a mostrar la carpeta embebida (se puede ver y abrir cada archivo sin salir del sitio) y un botón para abrirla directo en Drive.
+
+El Secretario solo necesita: abrir `documentos.html`, hacer clic en "Abrir carpeta de actas en Drive", y arrastrar el PDF del acta ahí. No necesita cuenta de GitHub ni saber qué es un CSV.
+
+> Esta carpeta es un respaldo digital práctico — no reemplaza el libro de actas físico/legalizado que exige el estatuto (Art. 12 y 30). Sigue siendo obligación del Secretario General llevar ese libro conforme a ley.
 
 ## 6. Filosofía del sitio
 
