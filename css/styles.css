@@ -25,8 +25,8 @@
 
     /* Acentos — evocan cielo nocturno y bronce de instrumentos astronómicos,
        sin caer en neón sobre negro */
-    --accent: #1F3A5F;          /* azul noche, color principal interactivo */
-    --accent-soft: #E8EEF5;     /* fondo suave para resaltar sobre --accent */
+    --accent: #B5480B;          /* naranja oscuro / terracota profundo, color principal interactivo */
+    --accent-soft: #FBEAE0;     /* fondo suave para resaltar sobre --accent */
     --gold: #96650F;            /* bronce/dorado apagado, para énfasis puntual */
     --gold-soft: #FBF1DD;
 
@@ -61,23 +61,24 @@ h1, h2, h3, .serif { font-family: 'Source Serif 4', Georgia, serif; }
 /* Header + nav */
 header.top {
     background-color: var(--accent);
-    padding: 26px 32px;
+    padding: 30px 32px;
     border-radius: var(--radius);
     margin-bottom: 20px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
+    text-align: center;
+    gap: 6px;
     box-shadow: var(--shadow);
 }
-header.top h1 { margin: 0; font-size: 23px; font-weight: 600; color: #FFFFFF; letter-spacing: 0.01em; }
-header.top h1 span { color: var(--gold-soft); font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; display: block; margin-top: 4px; letter-spacing: 0.02em; }
-header.top p { margin: 4px 0 0 0; color: #C9D6E6; font-size: 13px; }
+header.top h1 { margin: 0; font-size: 24px; font-weight: 600; color: #FFFFFF; letter-spacing: 0.01em; }
+header.top h1 span { color: var(--gold-soft); font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14.5px; display: block; margin-top: 5px; letter-spacing: 0.02em; }
+header.top p { margin: 6px 0 0 0; color: rgba(255,255,255,0.85); font-size: 13.5px; max-width: 60ch; }
 
 nav.mainnav {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
     margin-bottom: 22px;
 }
@@ -164,7 +165,7 @@ tr:hover td { background-color: var(--bg-inset); }
     text-decoration: none;
     transition: all 0.15s ease;
 }
-.btn:hover { background-color: #16283F; border-color: #16283F; }
+.btn:hover { background-color: #7C3406; border-color: #7C3406; }
 .btn.gold { background-color: var(--gold); border-color: var(--gold); }
 .btn.gold:hover { background-color: #7A5209; border-color: #7A5209; }
 .btn.small { padding: 7px 14px; font-size: 12.5px; }
@@ -236,9 +237,23 @@ tr:hover td { background-color: var(--bg-inset); }
     padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
     transition: all 0.15s ease; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.export-btn:hover { background-color: #16283F; }
+.export-btn:hover { background-color: #7C3406; }
 .search-box input { background-color: #FFFFFF; border: 1px solid var(--border-strong); color: var(--ink); padding: 10px 16px; border-radius: 8px; font-size: 14px; width: 280px; outline: none; }
 .search-box input:focus { border-color: var(--accent); }
+
+/* Flujograma central (index.html) */
+.flow-wrap { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 6px; margin: 24px 0 20px 0; }
+.flow-step { background: var(--bg-inset); border: 1px solid var(--border); border-radius: 10px; padding: 20px 18px; width: 210px; text-align: center; }
+.flow-step .flow-icon { font-size: 26px; display: block; margin-bottom: 8px; }
+.flow-step h4 { margin: 0 0 10px 0; font-family: 'Source Serif 4', serif; font-size: 15.5px; color: var(--accent); }
+.flow-step .flow-row { font-size: 12px; color: var(--ink-dim); margin-bottom: 5px; text-align: left; }
+.flow-step .flow-row b { color: var(--ink); font-weight: 600; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--gold); padding: 0 2px; }
+.flow-note { text-align: center; max-width: 62ch; margin: 4px auto 0 auto; color: var(--ink-dim); font-size: 14px; }
+@media (max-width: 760px) {
+    .flow-wrap { flex-direction: column; align-items: center; }
+    .flow-arrow { transform: rotate(90deg); }
+}
 
 footer.site { text-align: center; color: var(--ink-faint); font-size: 12.5px; padding: 30px 0 10px 0; }
 footer.site a { color: var(--accent); }

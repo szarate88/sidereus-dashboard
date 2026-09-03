@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidereus Nuncius — Mission Control 🌌</title>
+    <title>Sidereus Nuncius — Actividades</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -12,11 +12,8 @@
 <div class="container">
     <header class="top">
         <div>
-            <h1>SIDEREUS NUNCIUS <span>• MISSION CONTROL 🌌</span></h1>
-            <p>Ecosistema de Monitoreo de Actividades y Comunes de Conocimiento</p>
-        </div>
-        <div class="search-box">
-            <input type="text" id="taskSearch" onkeyup="filterTasks()" placeholder="Filtrar por actividad o responsable...">
+            <h1>SIDEREUS NUNCIUS <span>Comunidad Peruana de Ciencia, Tecnología y Sociedad</span></h1>
+            <p>Seguimiento de actividades y tareas por Dirección</p>
         </div>
     </header>
 
@@ -26,15 +23,20 @@
         <a href="asambleas.html">🗓️ Asambleas y RSVP</a>
         <a href="direcciones.html">🧭 Roles y Direcciones</a>
         <a href="documentos.html">📁 Documentos</a>
-        <a href="actividades.html" class="active">✅ Actividades (Mission Control)</a>
+        <a href="actividades.html" class="active">✅ Actividades</a>
     </nav>
 
     <div class="layout-grid">
         <div class="main-pane">
             <div class="card">
-                <h2>Cronograma de Actividades Críticas</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:2px solid var(--gold-soft); padding-bottom:12px; margin-bottom:18px;">
+                    <h2 style="border-bottom:none; padding-bottom:0; margin-bottom:0;">Cronograma de Actividades Críticas</h2>
+                    <div class="search-box">
+                        <input type="text" id="taskSearch" onkeyup="filterTasks()" placeholder="Filtrar por actividad o responsable...">
+                    </div>
+                </div>
                 <div class="table-wrapper" id="activities-table-target">
-                    <p style="color: var(--ink-dim);">Conectando con la base de datos estelar...</p>
+                    <p style="color: var(--ink-dim);">Cargando actividades...</p>
                 </div>
             </div>
         </div>
