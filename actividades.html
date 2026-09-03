@@ -19,12 +19,21 @@
 
     <nav class="mainnav">
         <a href="index.html">🏠 Inicio</a>
-        <a href="convocatorias.html">📜 Sobre Reuniones, Consejo Directivo y Asambleas</a>
+        <a href="convocatorias.html">📜 Reuniones y Quórum</a>
         <a href="asambleas.html">🗓️ Calendario</a>
         <a href="direcciones.html">🧭 Roles y Direcciones</a>
         <a href="documentos.html">📁 Documentos</a>
         <a href="actividades.html" class="active">✅ Actividades</a>
     </nav>
+
+    <!-- ================= CONFIG ================= -->
+    <!-- Mismo formulario de bitácora que en asambleas.html — pega el mismo enlace aquí -->
+    <script>
+      const CONFIG = {
+        BITACORA_FORM_URL: ""    // ej: "https://forms.gle/zzzzzzz"
+      };
+    </script>
+    <!-- ============================================ -->
 
     <div class="layout-grid">
         <div class="main-pane">
@@ -37,6 +46,10 @@
                 </div>
                 <div class="table-wrapper" id="activities-table-target">
                     <p style="color: var(--ink-dim);">Cargando actividades...</p>
+                </div>
+                <div class="note-box" style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <span>📝 ¿Nueva actividad, un avance o un cambio de estado? No edites el CSV — repórtalo aquí y se actualiza después.</span>
+                    <a class="btn small gold" id="bitacora-btn" href="#" target="_blank">Reportar avance</a>
                 </div>
             </div>
         </div>
@@ -224,6 +237,15 @@
         let val = document.getElementById("taskSearch").value.toLowerCase();
         let rows = document.querySelectorAll("#searchable-rows tr");
         rows.forEach(r => r.style.display = r.textContent.toLowerCase().includes(val) ? "" : "none");
+    }
+
+    const bitacoraBtn = document.getElementById('bitacora-btn');
+    if (CONFIG.BITACORA_FORM_URL) {
+        bitacoraBtn.href = CONFIG.BITACORA_FORM_URL;
+    } else {
+        bitacoraBtn.style.opacity = '0.5';
+        bitacoraBtn.style.pointerEvents = 'none';
+        bitacoraBtn.title = 'Aún no configurado — ver README.md';
     }
 
     const githubUser = "szarate88";

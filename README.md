@@ -83,6 +83,16 @@ Con esto, cada vez que alguien confirma en el Form, el contador de quórum en `a
 
 Cada reunión ya tiene un botón **"+ Google Calendar"** que no necesita ninguna configuración — arma el enlace automáticamente a partir de la fecha, hora y lugar que están en `data/asambleas.csv`, y cada socio la guarda en su propio calendario personal con un clic. No sincroniza en la otra dirección (si alguien cambia la fecha en su Google Calendar, no se actualiza aquí) — sigue siendo `data/asambleas.csv` la fuente de verdad.
 
+### D) Bitácora de notas y avances (para quienes no manejan GitHub/CSV)
+
+Solo una persona necesita saber editar los `.csv` de este repositorio — el resto de socios, incluyendo quien toma notas en una reunión o marca el avance de una tarea, no debería necesitar tocar GitHub para nada. Para eso:
+
+1. Crea un tercer Google Form, de uso general: Nombre, Tipo de registro (Nota de reunión / Avance de actividad / Otro), Reunión o actividad relacionada, Detalle.
+2. Copia el enlace y pégalo en `BITACORA_FORM_URL` dentro del bloque `CONFIG` — tanto en `asambleas.html` como en `actividades.html` (usa el mismo enlace en los dos).
+3. Las respuestas caen en una hoja de Google Sheets. Quien administra el sitio (por ahora, tú) revisa esa hoja cada cierto tiempo y traduce lo relevante a `data/tasks.csv`, `data/asambleas.csv`, o a un acta en `docs/actas/`.
+
+Esto no automatiza la carga a los `.csv` — sigue siendo un paso manual — pero saca a todos los demás socios de la necesidad de entender Git, GitHub o CSV para poder registrar lo que están haciendo.
+
 ## 5. Documentos
 
 Sube tus PDFs (estatuto, actas) a `docs/`. El estatuto firmado (`T0058555-signed.pdf`) ya viene incluido en este paquete.
