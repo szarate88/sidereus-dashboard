@@ -46,11 +46,18 @@ En `data/tasks.csv` hay una columna `Escalar` (vacía, `Consejo`, o `Asamblea`).
 
 Edita `data/roles.csv`. La columna `CargoEstatutario` debe usar exactamente: `Presidente`, `Vicepresidente`, `Secretario General`, `Tesorero`, o `Miembro` para el resto. La columna `Categoria` debe incluir la palabra "Titular" para que cuente en el cálculo de quórum.
 
-## 4. Cómo activar la confirmación de asistencia (RSVP) y el quórum en vivo
+## 4. Cómo activar "Proponer una reunión", la confirmación de asistencia (RSVP) y el quórum en vivo
 
-Un sitio estático en GitHub Pages no puede guardar quién confirmó asistencia por sí solo — para eso se necesita un lugar compartido donde todos los socios escriban su respuesta. La forma más simple y gratuita, sin programar un backend:
+Un sitio estático en GitHub Pages no puede guardar respuestas de varias personas por sí solo — para eso se necesita un lugar compartido donde todos los socios escriban. La forma más simple y gratuita, sin programar un backend: **dos Google Forms** (uno para proponer reunión, otro para confirmar asistencia).
 
-### Paso a paso (10 minutos)
+### A) Formulario para proponer una reunión
+
+1. Crea un Google Form con: Nombre, Tipo de reunión (Asamblea / Consejo Directivo / Reunión de Trabajo), Modalidad, Fecha y hora propuestas, Lugar, Tema o motivo.
+2. Copia el enlace del formulario ("Enviar" → ícono de enlace).
+3. En `asambleas.html`, dentro del bloque `CONFIG`, pégalo en `PROPOSE_MEETING_FORM_URL`.
+4. El Secretario General revisa las respuestas (Google Forms las guarda automáticamente en una hoja de respuestas) y, para las que se confirman, agrega la fila correspondiente en `data/asambleas.csv` — ese paso sigue siendo manual, pero ya nadie más que el Secretario necesita tocar GitHub.
+
+### B) Formulario para confirmar asistencia (RSVP) + quórum en vivo
 
 1. **Crea un Google Form** con estos campos:
    - Nombre completo (respuesta corta)
@@ -58,18 +65,23 @@ Un sitio estático en GitHub Pages no puede guardar quién confirmó asistencia 
    - ¿Asistirás? (opción múltiple: `Sí` / `No`)
 2. En el Form, ve a **Respuestas → vincular a Google Sheets** (crea una hoja de cálculo nueva).
 3. En esa Hoja de cálculo: **Archivo → Compartir → Publicar en la web**. Elige la pestaña de respuestas, formato **CSV**, y copia el enlace que te da.
-4. En `asambleas.html`, busca el bloque `CONFIG` cerca del inicio del `<body>` y pega:
+4. En `asambleas.html`, dentro del bloque `CONFIG`, pega:
    ```js
    const CONFIG = {
-     GOOGLE_FORM_URL: "https://forms.gle/TU-ENLACE-AQUI",
-     RSVP_SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/TU-ID/pub?output=csv"
+     GOOGLE_FORM_URL: "https://forms.gle/TU-ENLACE-DE-ASISTENCIA",
+     RSVP_SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/TU-ID/pub?output=csv",
+     PROPOSE_MEETING_FORM_URL: "https://forms.gle/TU-ENLACE-DE-PROPUESTA"
    };
    ```
 5. En el Google Sheet, si las columnas del Form no se llaman exactamente `IDReunion` y `Asistencia`, ajusta el JS de `asambleas.html` (función `loadRSVPCounts`) para que lea los nombres reales de tus columnas — o simplemente renombra los encabezados de la hoja para que coincidan.
 
 Con esto, cada vez que alguien confirma en el Form, el contador de quórum en `asambleas.html` se actualiza solo (puede demorar 1-2 minutos en reflejarse, es normal en Google Sheets).
 
-> Si por ahora no quieres configurar el Form, el sitio sigue funcionando igual — solo mostrará un aviso de que falta conectar el RSVP, y las agendas/quórum requerido se ven de todas formas.
+> Si por ahora no configuras los Forms, el sitio sigue funcionando igual — solo mostrará un aviso de que faltan conectar, y el calendario/quórum requerido se ve de todas formas.
+
+### C) Google Calendar
+
+Cada reunión ya tiene un botón **"+ Google Calendar"** que no necesita ninguna configuración — arma el enlace automáticamente a partir de la fecha, hora y lugar que están en `data/asambleas.csv`, y cada socio la guarda en su propio calendario personal con un clic. No sincroniza en la otra dirección (si alguien cambia la fecha en su Google Calendar, no se actualiza aquí) — sigue siendo `data/asambleas.csv` la fuente de verdad.
 
 ## 5. Documentos
 

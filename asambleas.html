@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asambleas y RSVP — Sidereus Nuncius</title>
+<title>Calendario — Sidereus Nuncius</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -19,8 +19,8 @@
 
   <nav class="mainnav">
     <a href="index.html">🏠 Inicio</a>
-    <a href="convocatorias.html">📜 Convocatorias</a>
-    <a href="asambleas.html" class="active">🗓️ Asambleas y RSVP</a>
+    <a href="convocatorias.html">📜 Sobre Reuniones, Consejo Directivo y Asambleas</a>
+    <a href="asambleas.html" class="active">🗓️ Calendario</a>
     <a href="direcciones.html">🧭 Roles y Direcciones</a>
     <a href="documentos.html">📁 Documentos</a>
     <a href="actividades.html">✅ Actividades</a>
@@ -30,8 +30,9 @@
   <!-- Edita estos dos valores cuando armes tu Google Form + Google Sheet (ver README.md) -->
   <script>
     const CONFIG = {
-      GOOGLE_FORM_URL: "",          // ej: "https://forms.gle/xxxxxxx"
-      RSVP_SHEET_CSV_URL: ""        // ej: link "Publicar en la web" de tu Google Sheet, formato CSV
+      GOOGLE_FORM_URL: "",              // Formulario para CONFIRMAR ASISTENCIA — ej: "https://forms.gle/xxxxxxx"
+      RSVP_SHEET_CSV_URL: "",           // Hoja de respuestas del formulario de asistencia, publicada como CSV
+      PROPOSE_MEETING_FORM_URL: ""      // Formulario para PROPONER una reunión nueva — ej: "https://forms.gle/yyyyyyy"
     };
   </script>
   <!-- ============================================ -->
@@ -59,29 +60,39 @@
   </div>
 
   <div class="card">
-    <h2>➕ Cómo agendar una nueva reunión</h2>
-    <p>Cualquier socio puede proponer una fecha — quien la agrega formalmente al calendario es el <strong>Secretario General</strong> (responsable del libro de actas y registro, Art. 34), editando <code>data/asambleas.csv</code> directamente en el repositorio de GitHub. Agrega una fila con este formato:</p>
-    <div class="table-wrapper">
-      <table>
-        <thead><tr><th>Columna</th><th>Qué poner</th></tr></thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>Código corto único, ej. <code>T4</code>, <code>C4</code>, <code>A3</code></td></tr>
-          <tr><td><code>tipo</code></td><td><code>Ordinaria</code> / <code>Extraordinaria</code> / <code>Consejo Directivo</code> / <code>Reunión de Trabajo</code></td></tr>
-          <tr><td><code>modalidad</code></td><td><code>Presencial</code> / <code>Virtual</code> / <code>Híbrida</code></td></tr>
-          <tr><td><code>titulo</code>, <code>fecha</code>, <code>hora</code>, <code>lugar</code></td><td>Datos básicos de la sesión</td></tr>
-          <tr><td><code>convocatoria_dias</code></td><td>Días mínimos de aviso: 5 (Asamblea), 2 (Consejo), 0 (trabajo)</td></tr>
-          <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code> — déjalo vacío mientras la reunión sea tentativa</td></tr>
-          <tr><td><code>quorum_regla</code></td><td>Cita libre de la regla del estatuto aplicable</td></tr>
-          <tr><td><code>estado_fecha</code></td><td><code>Confirmada</code> o <code>Tentativa</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="dim">Criterio sugerido de modalidad: si la reunión requiere firma física, votación formal amplia o es la Asamblea Anual → mejor <strong>presencial</strong>. Coordinaciones ágiles de una Dirección → <strong>virtual</strong> casi siempre funciona mejor.</p>
+    <h2>➕ Proponer una reunión</h2>
+    <p>Cualquier socio puede proponer fecha y tema para una reunión — no necesitas tocar GitHub ni el CSV. Completa el formulario y el Secretario General la revisa y la agrega al calendario oficial.</p>
+    <div id="propose-form-warning"></div>
+    <p style="text-align:center; margin-top:18px;">
+      <a class="btn gold" id="propose-meeting-btn" href="#" target="_blank">➕ Proponer una reunión</a>
+    </p>
+
+    <details style="margin-top:20px;">
+      <summary style="cursor:pointer; color:var(--ink-dim); font-size:13px; font-weight:600;">Solo para el Secretario General: cómo pasa una propuesta al calendario oficial</summary>
+      <p style="margin-top:14px;">Las propuestas llegan a la hoja de respuestas del formulario. Para oficializar una, agrégala como fila nueva en <code>data/asambleas.csv</code> con este formato:</p>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Columna</th><th>Qué poner</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>Código corto único, ej. <code>T4</code>, <code>C4</code>, <code>A3</code></td></tr>
+            <tr><td><code>tipo</code></td><td><code>Ordinaria</code> / <code>Extraordinaria</code> / <code>Consejo Directivo</code> / <code>Reunión de Trabajo</code></td></tr>
+            <tr><td><code>modalidad</code></td><td><code>Presencial</code> / <code>Virtual</code> / <code>Híbrida</code></td></tr>
+            <tr><td><code>titulo</code>, <code>fecha</code>, <code>hora</code>, <code>lugar</code></td><td>Datos básicos de la sesión</td></tr>
+            <tr><td><code>convocatoria_dias</code></td><td>Días mínimos de aviso: 5 (Asamblea), 2 (Consejo), 0 (trabajo)</td></tr>
+            <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code> — déjalo vacío mientras la reunión sea tentativa</td></tr>
+            <tr><td><code>quorum_regla</code></td><td>Cita libre de la regla del estatuto aplicable</td></tr>
+            <tr><td><code>estado_fecha</code></td><td><code>Confirmada</code> o <code>Tentativa</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dim">Criterio sugerido de modalidad: si la reunión requiere firma física, votación formal amplia o es la Asamblea Anual → mejor presencial. Coordinaciones ágiles de una Dirección → virtual casi siempre funciona mejor.</p>
+    </details>
   </div>
 
   <div class="card">
-    <h2>¿Cómo confirmo mi asistencia?</h2>
-    <p>Haz clic en <strong>"Confirmar asistencia"</strong> en la reunión que corresponda — te llevará a un formulario corto. Tus respuestas alimentan el contador de quórum de esta página en tiempo real (puede tardar 1-2 minutos en actualizarse).</p>
+    <h2>✅ Confirmar asistencia</h2>
+    <p>Haz clic en <strong>"Confirmar asistencia"</strong> dentro de la reunión que corresponda — es un formulario de un solo paso. Tus respuestas alimentan el contador de quórum de esta página en tiempo real (puede demorar 1-2 minutos en actualizarse).</p>
+    <p>También puedes darle a <strong>"+ Google Calendar"</strong> en cualquier reunión para guardarla directo en tu calendario personal, con fecha, hora y lugar ya cargados.</p>
   </div>
 
   <footer class="site">
@@ -191,6 +202,7 @@ function renderMeetings() {
         const formLink = CONFIG.GOOGLE_FORM_URL
             ? CONFIG.GOOGLE_FORM_URL + (CONFIG.GOOGLE_FORM_URL.includes('?') ? '&' : '?') + 'reunion=' + encodeURIComponent(m.titulo)
             : null;
+        const gcalLink = buildGCalLink(m);
 
         html += '<div class="meeting-card" style="' + (isPast ? 'opacity:.5;' : '') + '">'
             + '<span class="badge ' + badgeForTipo(m.tipo) + '">' + m.tipo + '</span>'
@@ -202,11 +214,49 @@ function renderMeetings() {
             + autoAgendaHTML
             + '<p class="dim" style="font-size:12px; margin-top:8px;"><strong>Regla de quórum:</strong> ' + m.quorum_regla + '</p>'
             + quorumHTML
-            + (!isPast && formLink ? '<a class="btn small" style="margin-top:12px;" href="' + formLink + '" target="_blank">✅ Confirmar asistencia</a>' : '')
+            + '<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">'
+            + (!isPast && formLink ? '<a class="btn small" href="' + formLink + '" target="_blank">✅ Confirmar asistencia</a>' : '')
+            + (!isPast ? '<a class="btn small gold" href="' + gcalLink + '" target="_blank">+ Google Calendar</a>' : '')
+            + '</div>'
             + '</div>';
     });
 
     document.getElementById('meetings-list').innerHTML = html || '<p class="dim">No hay reuniones que coincidan con este filtro.</p>';
+}
+
+// Construye un link "Agregar a Google Calendar" a partir de fecha/hora del CSV.
+// Soporta hora simple ("19:00") o rango ("16:00 - 19:00"); si no hay rango, asume 1.5h de duración.
+function buildGCalLink(m) {
+    const pad = n => String(n).padStart(2, '0');
+    const toStamp = (dateStr, timeStr) => {
+        const [h, mnt] = timeStr.split(':').map(s => parseInt(s, 10));
+        const [y, mo, d] = dateStr.split('-').map(s => parseInt(s, 10));
+        return `${y}${pad(mo)}${pad(d)}T${pad(h)}${pad(mnt || 0)}00`;
+    };
+
+    let startStr, endStr;
+    const horaParts = (m.hora || '').split('-').map(s => s.trim());
+    if (horaParts.length === 2 && horaParts[0] && horaParts[1]) {
+        startStr = toStamp(m.fecha, horaParts[0]);
+        endStr = toStamp(m.fecha, horaParts[1]);
+    } else {
+        const [h, mnt] = (horaParts[0] || '19:00').split(':').map(s => parseInt(s, 10));
+        startStr = toStamp(m.fecha, horaParts[0] || '19:00');
+        const endDate = new Date(2000, 0, 1, h, mnt || 0);
+        endDate.setMinutes(endDate.getMinutes() + 90);
+        endStr = toStamp(m.fecha, `${endDate.getHours()}:${endDate.getMinutes()}`);
+    }
+
+    const details = 'Tipo: ' + m.tipo + ' · Modalidad: ' + (m.modalidad || '') + (m.quorum_regla ? ' · Quórum: ' + m.quorum_regla : '');
+    const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: m.titulo,
+        dates: startStr + '/' + endStr,
+        details: details,
+        location: m.lugar || '',
+        ctz: 'America/Lima'
+    });
+    return 'https://calendar.google.com/calendar/render?' + params.toString();
 }
 
 function showConfigWarnings() {
@@ -215,6 +265,16 @@ function showConfigWarnings() {
     if (!CONFIG.RSVP_SHEET_CSV_URL) msgs.push('El conteo de quórum en vivo aún no está conectado a una hoja de respuestas.');
     if (msgs.length) {
         document.getElementById('config-warning').innerHTML = '<div class="note-box">⚙️ ' + msgs.join(' ') + ' Ver instrucciones de configuración en <code>README.md</code>.</div>';
+    }
+
+    const proposeBtn = document.getElementById('propose-meeting-btn');
+    if (CONFIG.PROPOSE_MEETING_FORM_URL) {
+        proposeBtn.href = CONFIG.PROPOSE_MEETING_FORM_URL;
+    } else {
+        proposeBtn.style.opacity = '0.5';
+        proposeBtn.style.pointerEvents = 'none';
+        document.getElementById('propose-form-warning').innerHTML =
+            '<div class="note-box">⚙️ El formulario para proponer reuniones aún no está configurado. Ver <code>README.md</code>.</div>';
     }
 }
 
