@@ -6,6 +6,13 @@
     <title>Sidereus Nuncius — Actividades</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .matrix-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        .matrix-table th, .matrix-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+        .matrix-table th { background: var(--bg-inset); font-weight: 600; }
+        .matrix-table td:first-child, .matrix-table th:first-child { text-align: left; color: var(--ink-dim); font-weight: 600; white-space: nowrap; }
+        .matrix-cell-hit { background: var(--accent-soft); color: var(--accent); font-weight: 700; border-radius: 6px; }
+    </style>
 </head>
 <body>
 
@@ -35,42 +42,63 @@
     </script>
     <!-- ============================================ -->
 
-    <div class="layout-grid">
-        <div class="main-pane">
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:2px solid var(--gold-soft); padding-bottom:12px; margin-bottom:18px;">
-                    <h2 style="border-bottom:none; padding-bottom:0; margin-bottom:0;">Cronograma de Actividades Críticas</h2>
-                    <div class="search-box">
-                        <input type="text" id="taskSearch" onkeyup="filterTasks()" placeholder="Filtrar por actividad o responsable...">
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-actividades" onclick="toggleMainView('actividades')">📋 Actividades</button>
+        <button class="tab-btn" id="tab-avance" onclick="toggleMainView('avance')">📈 Avance semanal</button>
+    </div>
+
+    <div id="panel-actividades" class="week-content active">
+        <div class="layout-grid">
+            <div class="main-pane">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:2px solid var(--gold-soft); padding-bottom:12px; margin-bottom:18px;">
+                        <h2 style="border-bottom:none; padding-bottom:0; margin-bottom:0;">Cronograma de Actividades Críticas</h2>
+                        <div class="search-box">
+                            <input type="text" id="taskSearch" onkeyup="filterTasks()" placeholder="Filtrar por actividad o responsable...">
+                        </div>
+                    </div>
+                    <div class="table-wrapper" id="activities-table-target">
+                        <p style="color: var(--ink-dim);">Cargando actividades...</p>
+                    </div>
+                    <div class="note-box" style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <span>📝 ¿Nueva actividad, un avance o un cambio de estado? No edites el CSV — repórtalo aquí y se actualiza después.</span>
+                        <a class="btn small gold" id="bitacora-btn" href="#" target="_blank">Reportar avance</a>
                     </div>
                 </div>
-                <div class="table-wrapper" id="activities-table-target">
-                    <p style="color: var(--ink-dim);">Cargando actividades...</p>
-                </div>
-                <div class="note-box" style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-                    <span>📝 ¿Nueva actividad, un avance o un cambio de estado? No edites el CSV — repórtalo aquí y se actualiza después.</span>
-                    <a class="btn small gold" id="bitacora-btn" href="#" target="_blank">Reportar avance</a>
-                </div>
             </div>
-        </div>
 
-        <div class="sidebar-pane">
-            <div class="card">
-                <h2>Carga de Trabajo</h2>
-                <p class="dim" style="font-size:12.5px; margin-top:-8px;">Total acumulado a la fecha — no es de una semana en particular.</p>
-                <div id="current-metrics-list"></div>
+            <div class="sidebar-pane">
+                <div class="card">
+                    <h2>Carga de Trabajo</h2>
+                    <p class="dim" style="font-size:12.5px; margin-top:-8px;">Total acumulado a la fecha — no es de una semana en particular.</p>
+                    <div id="current-metrics-list"></div>
 
-                <button class="export-btn" onclick="exportContributionReport()">
-                    📥 Exportar Reporte de Contribuciones (CSV)
-                </button>
+                    <button class="export-btn" onclick="exportContributionReport()">
+                        📥 Exportar Reporte de Contribuciones (CSV)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <h2>📈 Avance semanal del equipo</h2>
-        <p class="dim">Se arma solo a partir de la <strong>Fecha Límite</strong> de las actividades marcadas como Completado en <code>data/tasks.csv</code> — nadie necesita llevar un registro aparte semana a semana. Si alguien reporta un avance por el formulario de bitácora en vez de editar el CSV directamente, aparece aquí recién cuando ese avance se traslada al archivo.</p>
-        <div id="weekly-chart"><p class="dim">Cargando...</p></div>
+    <div id="panel-avance" class="week-content">
+        <div class="card">
+            <h2>📈 Avance semanal del equipo</h2>
+            <p class="dim">Se arma solo a partir de la <strong>Fecha Límite</strong> de las actividades marcadas como Completado — nadie necesita llevar un registro aparte semana a semana.</p>
+            <div id="weekly-chart"><p class="dim">Cargando...</p></div>
+        </div>
+
+        <div class="card">
+            <h2>🏆 Contribución total por persona</h2>
+            <p class="dim">Cuántas actividades completadas acumula cada persona, de mayor a menor.</p>
+            <div id="leaderboard-chart"><p class="dim">Cargando...</p></div>
+        </div>
+
+        <div class="card">
+            <h2>🗓️ Detalle semanal por persona</h2>
+            <p class="dim">Cuántas actividades completó cada persona, semana a semana (últimas semanas con datos).</p>
+            <div class="table-wrapper" id="weekly-matrix"><p class="dim">Cargando...</p></div>
+        </div>
     </div>
 
     <footer class="site">
@@ -81,6 +109,18 @@
 <script>
     const teamList = ["Sebastian", "Fernando", "Jose", "Josue", "Luis", "Esteban", "Juan Diego"];
     let globalMetrics = {};
+
+    function toggleMainView(view) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.week-content').forEach(c => c.classList.remove('active'));
+        if (view === 'actividades') {
+            document.getElementById('tab-actividades').classList.add('active');
+            document.getElementById('panel-actividades').classList.add('active');
+        } else {
+            document.getElementById('tab-avance').classList.add('active');
+            document.getElementById('panel-avance').classList.add('active');
+        }
+    }
 
     function processCSVMetrics(data) {
         teamList.forEach(member => { globalMetrics[member] = { active: 0, completed: 0 }; });
@@ -103,6 +143,8 @@
 
         renderMetricsDashboard();
         renderWeeklyChart(computeWeeklyCompletions(data));
+        renderLeaderboard();
+        renderWeeklyMatrix(computePersonWeekly(data));
     }
 
     // Agrupa las actividades Completado por la semana (lunes) de su Fecha Límite.
@@ -113,6 +155,14 @@
         const diff = day === 0 ? -6 : 1 - day;
         d.setDate(d.getDate() + diff);
         return d;
+    }
+
+    function weekLabel(key) {
+        const monday = new Date(key + "T00:00:00");
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        const opts = { day: '2-digit', month: 'short' };
+        return `${monday.toLocaleDateString('es-ES', opts)} – ${sunday.toLocaleDateString('es-ES', opts)}`;
     }
 
     function computeWeeklyCompletions(data) {
@@ -127,17 +177,30 @@
                 weekMap[key] = (weekMap[key] || 0) + 1;
             }
         });
-        return Object.keys(weekMap).sort().map(key => {
-            const monday = new Date(key + "T00:00:00");
-            const sunday = new Date(monday);
-            sunday.setDate(monday.getDate() + 6);
-            const opts = { day: '2-digit', month: 'short' };
-            return {
-                key,
-                label: `${monday.toLocaleDateString('es-ES', opts)} – ${sunday.toLocaleDateString('es-ES', opts)}`,
-                count: weekMap[key]
-            };
+        return Object.keys(weekMap).sort().map(key => ({ key, label: weekLabel(key), count: weekMap[key] }));
+    }
+
+    // Igual que computeWeeklyCompletions, pero desglosado por persona: { weekKeys: [...], byPerson: { nombre: {weekKey: count} } }
+    function computePersonWeekly(data) {
+        const byPerson = {};
+        teamList.forEach(m => byPerson[m] = {});
+        const weekKeysSet = new Set();
+
+        data.forEach(row => {
+            const resp = row.Responsable ? row.Responsable.trim() : "";
+            const status = (row.Estado || "").trim().toLowerCase();
+            const deadlineStr = row['Fecha Límite'] ? row['Fecha Límite'].trim() : "";
+            const isComp = (status === "completado" || status === "completed" || status === "finalizado");
+            if (isComp && deadlineStr && byPerson[resp]) {
+                const monday = mondayOf(deadlineStr);
+                const key = monday.toISOString().slice(0, 10);
+                byPerson[resp][key] = (byPerson[resp][key] || 0) + 1;
+                weekKeysSet.add(key);
+            }
         });
+
+        const weekKeys = Array.from(weekKeysSet).sort();
+        return { weekKeys, byPerson };
     }
 
     function renderWeeklyChart(weeks) {
@@ -159,6 +222,56 @@
                     </div>
                 </div>`;
         });
+        target.innerHTML = html;
+    }
+
+    function renderLeaderboard() {
+        const target = document.getElementById('leaderboard-chart');
+        const entries = teamList
+            .map(m => ({ name: m, count: globalMetrics[m].completed }))
+            .filter(e => e.count > 0)
+            .sort((a, b) => b.count - a.count);
+
+        if (!entries.length) {
+            target.innerHTML = '<p class="dim">Todavía no hay actividades completadas.</p>';
+            return;
+        }
+        const max = entries[0].count;
+        let html = '';
+        entries.forEach(e => {
+            const pct = Math.max(8, Math.round((e.count / max) * 100));
+            html += `
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+                    <div style="width:100px; font-size:13px; font-weight:600; color:var(--ink); flex-shrink:0;">${e.name}</div>
+                    <div style="flex:1; background:var(--bg-inset); border:1px solid var(--border); border-radius:6px; overflow:hidden;">
+                        <div style="width:${pct}%; background:var(--gold); padding:6px 10px; color:#fff; font-size:12px; font-weight:600; border-radius:6px 0 0 6px; min-width:28px; text-align:right;">${e.count}</div>
+                    </div>
+                </div>`;
+        });
+        target.innerHTML = html;
+    }
+
+    function renderWeeklyMatrix(personWeekly) {
+        const target = document.getElementById('weekly-matrix');
+        const weekKeys = personWeekly.weekKeys.slice(-8);
+        if (!weekKeys.length) {
+            target.innerHTML = '<p class="dim">Todavía no hay actividades completadas con fecha límite para desglosar.</p>';
+            return;
+        }
+        const activeMembers = teamList.filter(m => weekKeys.some(k => (personWeekly.byPerson[m][k] || 0) > 0));
+
+        let html = '<table class="matrix-table"><thead><tr><th>Semana</th>';
+        activeMembers.forEach(m => html += `<th>${m}</th>`);
+        html += '</tr></thead><tbody>';
+        weekKeys.forEach(k => {
+            html += `<tr><td>${weekLabel(k)}</td>`;
+            activeMembers.forEach(m => {
+                const c = personWeekly.byPerson[m][k] || 0;
+                html += c > 0 ? `<td><span class="matrix-cell-hit">${c}</span></td>` : `<td style="color:var(--ink-faint);">—</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
         target.innerHTML = html;
     }
 
