@@ -37,7 +37,8 @@
     <!-- Mismo formulario de bitácora que en asambleas.html — pega el mismo enlace aquí -->
     <script>
       const CONFIG = {
-        BITACORA_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf3DanrD1ricUzMurZ0v65ftbjUSKpWdd9aV3IjWc-lsHwtOQ/viewform"    // Formulario para registrar notas/avances
+        BITACORA_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf3DanrD1ricUzMurZ0v65ftbjUSKpWdd9aV3IjWc-lsHwtOQ/viewform",    // Formulario para registrar notas/avances
+        BITACORA_SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTCPhwSSNxTOnAIJtaXezUvGb2KbQY4_EZRI-Ci_BT1s7E-YKMUo03F-lYi4t1UAGYfkLQFWI_tjbgC/pub?gid=122392711&single=true&output=csv"    // Hoja de respuestas de la bitácora, publicada como CSV (para verlas aquí mismo)
       };
     </script>
     <!-- ============================================ -->
@@ -45,6 +46,7 @@
     <div class="tabs">
         <button class="tab-btn active" id="tab-actividades" onclick="toggleMainView('actividades')">📋 Actividades</button>
         <button class="tab-btn" id="tab-avance" onclick="toggleMainView('avance')">📈 Avance semanal</button>
+        <button class="tab-btn" id="tab-bitacora" onclick="toggleMainView('bitacora')">🗒️ Bitácora</button>
     </div>
 
     <div id="panel-actividades" class="week-content active">
@@ -101,6 +103,14 @@
         </div>
     </div>
 
+    <div id="panel-bitacora" class="week-content">
+        <div class="card">
+            <h2>🗒️ Bitácora — notas y avances reportados</h2>
+            <p class="dim">Todo lo que el equipo registra desde el botón "Reportar avance", más reciente primero. Útil para actualizar <code>tasks.csv</code> aunque no hayas estado en la reunión donde se generó.</p>
+            <div class="table-wrapper" id="bitacora-table"><p class="dim">Cargando...</p></div>
+        </div>
+    </div>
+
     <footer class="site">
         Datos leídos de <code>data/tasks.csv</code> (o del repo remoto configurado abajo)
     </footer>
@@ -113,13 +123,8 @@
     function toggleMainView(view) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.week-content').forEach(c => c.classList.remove('active'));
-        if (view === 'actividades') {
-            document.getElementById('tab-actividades').classList.add('active');
-            document.getElementById('panel-actividades').classList.add('active');
-        } else {
-            document.getElementById('tab-avance').classList.add('active');
-            document.getElementById('panel-avance').classList.add('active');
-        }
+        document.getElementById('tab-' + view).classList.add('active');
+        document.getElementById('panel-' + view).classList.add('active');
     }
 
     function processCSVMetrics(data) {
@@ -352,6 +357,32 @@
         rows.forEach(r => r.style.display = r.textContent.toLowerCase().includes(val) ? "" : "none");
     }
 
+    // Pinta la hoja de respuestas de la bitácora como tabla, más reciente primero.
+    function renderBitacoraTable(csvUrl) {
+        const target = document.getElementById('bitacora-table');
+        if (!csvUrl) {
+            target.innerHTML = '<p class="dim">⚙️ Todavía no está conectada la hoja de respuestas. Ver <code>README.md</code>.</p>';
+            return;
+        }
+        Papa.parse(csvUrl, {
+            download: true, header: true, skipEmptyLines: true,
+            complete: r => {
+                const rows = r.data.filter(row => Object.values(row).some(v => v && v.trim() !== ''));
+                if (!rows.length) { target.innerHTML = '<p class="dim">Todavía no hay registros en la bitácora.</p>'; return; }
+                const tsCol = Object.keys(rows[0]).find(h => h.toLowerCase().includes('marca temporal') || h.toLowerCase().includes('timestamp'));
+                if (tsCol) rows.sort((a, b) => new Date(b[tsCol]) - new Date(a[tsCol]));
+                const headers = Object.keys(rows[0]);
+                let html = '<table><thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+                rows.forEach(row => {
+                    html += '<tr>' + headers.map(h => `<td>${(row[h] || '').trim()}</td>`).join('') + '</tr>';
+                });
+                html += '</tbody></table>';
+                target.innerHTML = html;
+            },
+            error: () => { target.innerHTML = '<p class="dim">No se pudo cargar la hoja de respuestas.</p>'; }
+        });
+    }
+
     const bitacoraBtn = document.getElementById('bitacora-btn');
     if (CONFIG.BITACORA_FORM_URL) {
         bitacoraBtn.href = CONFIG.BITACORA_FORM_URL;
@@ -360,6 +391,7 @@
         bitacoraBtn.style.pointerEvents = 'none';
         bitacoraBtn.title = 'Aún no configurado — ver README.md';
     }
+    renderBitacoraTable(CONFIG.BITACORA_SHEET_CSV_URL);
 
     const githubUser = "szarate88";
     const csvSource = `https://raw.githubusercontent.com/${githubUser}/sidereus-dashboard/main/data/tasks.csv`;

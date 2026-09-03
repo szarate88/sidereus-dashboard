@@ -93,6 +93,13 @@ Solo una persona necesita saber editar los `.csv` de este repositorio — el res
 
 Esto no automatiza la carga a los `.csv` — sigue siendo un paso manual — pero saca a todos los demás socios de la necesidad de entender Git, GitHub o CSV para poder registrar lo que están haciendo.
 
+**Para verlas directamente en el sitio (sin entrar a Google Forms):**
+
+1. En el formulario (pestaña "Respuestas" → ícono verde de Sheets), vincúlalo a una Hoja de cálculo nueva.
+2. En esa Hoja: **Archivo → Compartir → Publicar en la web**. Elige la pestaña de respuestas, formato **CSV**, y copia el enlace.
+3. Pégalo en `BITACORA_SHEET_CSV_URL` dentro del `CONFIG` de `actividades.html`. Ahí aparece una pestaña **"🗒️ Bitácora"** con todos los registros, más reciente primero — así puedes revisar lo que el equipo fue anotando en sus reuniones de trabajo, aunque no hayas estado presente, y de ahí actualizar `tasks.csv`.
+4. Lo mismo aplica para el formulario de **"Proponer una reunión"**: publícalo como CSV y pégalo en `PROPOSE_SHEET_CSV_URL` dentro del `CONFIG` de `asambleas.html` — ahí verás las propuestas recibidas justo debajo del botón.
+
 ## 5. Documentos
 
 ### Documentos constitutivos (estatuto, testimonio notarial)
