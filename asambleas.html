@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calendario — Sidereus Nuncius</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -190,6 +191,7 @@ function renderMeetings() {
             + '<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">'
             + (!isPast && formLink ? '<a class="btn small" href="' + formLink + '" target="_blank">✅ Confirmar asistencia</a>' : '')
             + (!isPast ? '<a class="btn small gold" href="' + gcalLink + '" target="_blank">+ Google Calendar</a>' : '')
+            + '<button class="btn small" style="border-color:var(--border); color:var(--ink-dim);" onclick="downloadMeetingPDFById(\'' + m.id + '\')">📄 Descargar PDF</button>'
             + '</div>'
             + '</div>';
     });
@@ -220,7 +222,12 @@ function buildGCalLink(m) {
         endStr = toStamp(m.fecha, `${endDate.getHours()}:${endDate.getMinutes()}`);
     }
 
-    const details = 'Tipo: ' + m.tipo + ' · Modalidad: ' + (m.modalidad || '') + (m.quorum_regla ? ' · Quórum: ' + m.quorum_regla : '');
+    let details = 'Tipo: ' + m.tipo + ' · Modalidad: ' + (m.modalidad || '');
+    if (m.quorum_regla) details += '\nQuórum: ' + m.quorum_regla;
+    const agendaForCal = (m.agenda || '').split('|').map(s => s.trim()).filter(Boolean);
+    if (agendaForCal.length) {
+        details += '\n\nAgenda:\n' + agendaForCal.map((a, i) => (i + 1) + '. ' + a).join('\n');
+    }
     const params = new URLSearchParams({
         action: 'TEMPLATE',
         text: m.titulo,
@@ -230,6 +237,54 @@ function buildGCalLink(m) {
         ctz: 'America/Lima'
     });
     return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+// Genera y descarga un PDF con los datos de la reunión y su agenda, usando jsPDF (sin backend).
+function downloadMeetingPDF(m) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const marginL = 15;
+    const maxWidth = 180;
+    let y = 20;
+
+    doc.setFontSize(15);
+    const titleLines = doc.splitTextToSize(m.titulo, maxWidth);
+    doc.text(titleLines, marginL, y);
+    y += titleLines.length * 7 + 4;
+
+    doc.setFontSize(10);
+    doc.text(`Tipo: ${m.tipo}   ·   Modalidad: ${m.modalidad || '—'}`, marginL, y); y += 6;
+    doc.text(`Fecha: ${m.fecha}   Hora: ${m.hora}`, marginL, y); y += 6;
+    const lugarLines = doc.splitTextToSize(`Lugar: ${m.lugar || '—'}`, maxWidth);
+    doc.text(lugarLines, marginL, y); y += lugarLines.length * 6 + 4;
+
+    if (m.quorum_regla) {
+        doc.setFont(undefined, 'bold'); doc.text('Regla de quórum:', marginL, y); doc.setFont(undefined, 'normal');
+        y += 6;
+        const quorumLines = doc.splitTextToSize(m.quorum_regla, maxWidth);
+        doc.text(quorumLines, marginL, y);
+        y += quorumLines.length * 6 + 6;
+    }
+
+    const items = (m.agenda || '').split('|').map(s => s.trim()).filter(Boolean);
+    if (items.length) {
+        doc.setFont(undefined, 'bold'); doc.text('Agenda', marginL, y); doc.setFont(undefined, 'normal');
+        y += 8;
+        items.forEach((item, i) => {
+            const lines = doc.splitTextToSize(`${i + 1}. ${item}`, maxWidth);
+            if (y + lines.length * 6 > 280) { doc.addPage(); y = 20; }
+            doc.text(lines, marginL, y);
+            y += lines.length * 6 + 5;
+        });
+    }
+
+    const filename = m.titulo.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi, '_').replace(/^_+|_+$/g, '') + '.pdf';
+    doc.save(filename);
+}
+
+function downloadMeetingPDFById(id) {
+    const m = meetingsData.find(x => x.id === id);
+    if (m) downloadMeetingPDF(m);
 }
 
 function showConfigWarnings() {
