@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles y Direcciones — Sidereus Nuncius</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+
+  <header class="top">
+    <div>
+      <h1>SIDEREUS NUNCIUS <span>• ROLES Y DIRECCIONES 🧭</span></h1>
+      <p>Quién decide qué, y quién es responsable de qué</p>
+    </div>
+  </header>
+
+  <nav class="mainnav">
+    <a href="index.html">🏠 Inicio</a>
+    <a href="convocatorias.html">📜 Convocatorias</a>
+    <a href="asambleas.html">🗓️ Asambleas y RSVP</a>
+    <a href="direcciones.html" class="active">🧭 Roles y Direcciones</a>
+    <a href="documentos.html">📁 Documentos</a>
+    <a href="actividades.html">✅ Actividades (Mission Control)</a>
+  </nav>
+
+  <div class="card">
+    <h2>Consejo Directivo (Art. 28, 31-35)</h2>
+    <p class="dim">Se elige por 2 años, reelegible ilimitadamente. Es la instancia intermedia de decisión, por debajo de la Asamblea. Datos leídos de <code>data/roles.csv</code> — edítalo para mantenerlo al día.</p>
+    <div class="note-box info">
+      Cada cargo (Presidente, Vicepresidente, Secretario, Tesorero) tiene funciones que aplican a <strong>toda la asociación</strong> (ver abajo). Además, cada uno lidera una Dirección específica para el trabajo del día a día — esa columna "Dirección que lidera" es la que responde "¿a quién le pregunto sobre X tema operativo?".
+    </div>
+    <div id="consejo-directivo"></div>
+  </div>
+
+  <div class="card">
+    <h2>Funciones clave por cargo</h2>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="cargo">Presidente</div>
+        <ul>
+          <li>Representación legal de la asociación</li>
+          <li>Convoca y preside Asamblea y Consejo Directivo</li>
+          <li>Firma toda la documentación oficial</li>
+          <li>Resuelve asuntos no previstos, dando cuenta a la siguiente Asamblea</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Vicepresidente</div>
+        <ul>
+          <li>Apoya al Presidente</li>
+          <li>Lo reemplaza en ausencia o impedimento temporal, con los mismos derechos y deberes</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Secretario General</div>
+        <ul>
+          <li>Mantiene al día los libros de actas</li>
+          <li>Lleva el registro de asociados</li>
+          <li>Lee las actas en cada sesión y expide copias certificadas</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Tesorero</div>
+        <ul>
+          <li>Custodia el patrimonio de la asociación</li>
+          <li>Cobro y recaudación de cuotas</li>
+          <li>Contabilidad, presupuesto anual y balances</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Las 4 Direcciones operativas (Art. 36-40)</h2>
+    <p>Aquí es donde vive la ejecución del día a día. Cada Dirección organiza sus propias reuniones de trabajo (sin formalidad estatutaria) y eleva al Consejo Directivo lo que requiera decisión institucional.</p>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="cargo">Investigación e Incidencia</div>
+        <ul>
+          <li>Planificar y dirigir actividades de investigación y desarrollo</li>
+          <li>Definir metas y presupuestos de proyectos</li>
+          <li>Coordinar con centros de investigación externos</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Desarrollo Organizacional</div>
+        <ul>
+          <li>Procesos administrativos, logísticos y financieros</li>
+          <li>Gestión de recursos humanos de la organización</li>
+          <li>Ingreso, desempeño y salida de miembros</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Cooperación Organizacional</div>
+        <ul>
+          <li>Gestionar alianzas y cooperaciones con otras organizaciones</li>
+          <li>Consolidar relaciones con actores aliados a los fines de la asociación</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="cargo">Comunicaciones e Imagen Institucional</div>
+        <ul>
+          <li>Estrategia de comunicación interna y externa</li>
+          <li>Difusión, marketing y manejo de crisis</li>
+          <li>Fomento de la ciencia, tecnología e innovación hacia afuera</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cómo fluye una decisión</h2>
+    <div class="meeting-card">
+      <strong>1. Reunión de trabajo</strong> (Dirección o equipo) — se discute y avanza, sin quórum formal.
+      <br><strong>2. ¿Necesita efecto institucional?</strong> (gasto, alianza, nuevo miembro, contrato) →
+      <br><strong>3. Consejo Directivo</strong> — sesiona cada 3 meses (o extraordinaria con 48h de aviso). Decide por mayoría de asistentes.
+      <br><strong>4. ¿Excede las facultades del Consejo o toca el estatuto?</strong> →
+      <br><strong>5. Asamblea General</strong> — única instancia para modificar el estatuto, disolver la asociación, o lo que el estatuto le reserve expresamente.
+    </div>
+    <div class="note-box">
+      🔗 En la práctica: marca una fila de <code>data/tasks.csv</code> con <code>Escalar = Consejo</code> o <code>Escalar = Asamblea</code> cuando una actividad se estanque o necesite decisión institucional. Aparecerá automáticamente en la agenda de la <strong>próxima sesión correspondiente</strong> en <a href="asambleas.html">Asambleas y RSVP</a> — así nadie pierde de vista los pendientes reales, sin llenar la Asamblea de tareas operativas.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Ausencias y penalidades</h2>
+    <p>El estatuto es breve en este punto — no tiene un capítulo de "sanciones" como tal. Esto es exactamente lo que sí contempla:</p>
+    <ul>
+      <li><strong>Renuncia (Art. 17):</strong> no exime del pago de cuotas de membresía pendientes a la fecha de la renuncia. Los aportes ya realizados no son reembolsables.</li>
+      <li><strong>Ausencia al Consejo Directivo (Art. 29):</strong> quien falte sin causa justificada a <strong>más de 3 reuniones consecutivas</strong> puede ser reemplazado por la Asamblea General.</li>
+    </ul>
+    <div class="note-box">
+      El estatuto <strong>no define penalidades para faltar a reuniones de trabajo</strong> — eso queda abierto a criterio interno. Si quieren reglas propias (ej. reasignar tareas tras X inasistencias seguidas a coordinaciones de Dirección), el Consejo Directivo está facultado a dictarlas como reglamento interno (Art. 28, inciso i), siempre que luego lo apruebe la Asamblea General.
+    </div>
+  </div>
+
+  <footer class="site">
+    Datos de personas y Direcciones en <code>/data/roles.csv</code> — actualízalo cuando cambien cargos o direcciones asignadas.
+  </footer>
+
+</div>
+
+<script>
+function badgeClass(cat) {
+    if (cat && cat.toLowerCase().includes('fundador')) return 'badge-success';
+    if (cat && cat.toLowerCase().includes('definir')) return 'badge-warn';
+    return 'badge-info';
+}
+
+function renderConsejo(data) {
+    const cargosOrden = ["Presidente", "Vicepresidente", "Secretario General", "Tesorero"];
+    let html = '<div class="table-wrapper"><table><thead><tr><th>Cargo</th><th>Nombre</th><th>Categoría</th><th>Dirección que lidera</th></tr></thead><tbody>';
+
+    cargosOrden.forEach(cargo => {
+        const row = data.find(r => (r.CargoEstatutario || '').trim() === cargo);
+        if (row) {
+            html += `<tr>
+                <td><span class="badge badge-info">${cargo}</span></td>
+                <td><strong>${row.Nombre}</strong></td>
+                <td><span class="badge ${badgeClass(row.Categoria)}">${row.Categoria}</span></td>
+                <td>${row.Direccion || '—'}</td>
+            </tr>`;
+        }
+    });
+    html += '</tbody></table></div>';
+
+    html += '<h3 style="margin-top:22px;">Otros miembros</h3><div class="table-wrapper"><table><thead><tr><th>Nombre</th><th>Categoría</th><th>Dirección</th></tr></thead><tbody>';
+    data.filter(r => !cargosOrden.includes((r.CargoEstatutario || '').trim())).forEach(row => {
+        html += `<tr><td>${row.Nombre}</td><td><span class="badge ${badgeClass(row.Categoria)}">${row.Categoria}</span></td><td>${row.Direccion || '—'}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+
+    document.getElementById('consejo-directivo').innerHTML = html;
+}
+
+Papa.parse('data/roles.csv', {
+    download: true, header: true, skipEmptyLines: true,
+    complete: r => renderConsejo(r.data),
+    error: () => { document.getElementById('consejo-directivo').innerHTML = '<p class="dim">No se pudo cargar data/roles.csv</p>'; }
+});
+</script>
+
+</body>
+</html>

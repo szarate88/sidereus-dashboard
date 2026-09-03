@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asambleas y RSVP — Sidereus Nuncius</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .type-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .type-tab { background: var(--bg-space); border: 1px solid var(--border-glow); color: var(--text-dim); padding: 8px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .type-tab.active { background: var(--starlight); color: var(--bg-space); border-color: var(--starlight); }
+  .auto-agenda { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.06); border: 1px dashed rgba(239, 68, 68, 0.35); }
+  .auto-agenda strong { color: var(--danger); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .auto-agenda ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 12.5px; }
+  .auto-agenda li span.dim { font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="top">
+    <div>
+      <h1>SIDEREUS NUNCIUS <span>• ASAMBLEAS Y RSVP 🗓️</span></h1>
+      <p>Calendario oficial, agenda de cada sesión y confirmación de asistencia</p>
+    </div>
+  </header>
+
+  <nav class="mainnav">
+    <a href="index.html">🏠 Inicio</a>
+    <a href="convocatorias.html">📜 Convocatorias</a>
+    <a href="asambleas.html" class="active">🗓️ Asambleas y RSVP</a>
+    <a href="direcciones.html">🧭 Roles y Direcciones</a>
+    <a href="documentos.html">📁 Documentos</a>
+    <a href="actividades.html">✅ Actividades (Mission Control)</a>
+  </nav>
+
+  <!-- ================= CONFIG ================= -->
+  <!-- Edita estos dos valores cuando armes tu Google Form + Google Sheet (ver README.md) -->
+  <script>
+    const CONFIG = {
+      GOOGLE_FORM_URL: "",          // ej: "https://forms.gle/xxxxxxx"
+      RSVP_SHEET_CSV_URL: ""        // ej: link "Publicar en la web" de tu Google Sheet, formato CSV
+    };
+  </script>
+  <!-- ============================================ -->
+
+  <div id="config-warning"></div>
+
+  <div class="note-box info">
+    📌 Las frecuencias del estatuto (1 Asamblea Ordinaria al año, Consejo Directivo cada 3 meses) son <strong>mínimos obligatorios, no topes</strong>. Pueden programarse tantas Asambleas Extraordinarias, sesiones de Consejo y reuniones de trabajo como se necesiten — este calendario no tiene límite.
+  </div>
+
+  <div class="card">
+    <h2>Próximas reuniones</h2>
+    <p class="dim">Datos leídos de <code>data/asambleas.csv</code>. Filtra por tipo para diferenciarlas rápido — el color y el ícono de modalidad ayudan a distinguirlas de un vistazo.</p>
+
+    <div class="type-tabs">
+      <button class="type-tab active" data-filter="todas">Todas</button>
+      <button class="type-tab" data-filter="asamblea">🏛️ Asambleas</button>
+      <button class="type-tab" data-filter="consejo">🧭 Consejo Directivo</button>
+      <button class="type-tab" data-filter="trabajo">🛠️ Reuniones de Trabajo</button>
+    </div>
+
+    <div id="meetings-list"><p class="dim">Cargando calendario...</p></div>
+  </div>
+
+  <div class="card">
+    <h2>➕ Cómo agendar una nueva reunión</h2>
+    <p>Cualquier socio puede proponer una fecha — quien la agrega formalmente al calendario es el <strong>Secretario General</strong> (responsable del libro de actas y registro, Art. 34), editando <code>data/asambleas.csv</code> directamente en el repositorio de GitHub. Agrega una fila con este formato:</p>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Columna</th><th>Qué poner</th></tr></thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>Código corto único, ej. <code>T4</code>, <code>C4</code>, <code>A3</code></td></tr>
+          <tr><td><code>tipo</code></td><td><code>Ordinaria</code> / <code>Extraordinaria</code> / <code>Consejo Directivo</code> / <code>Reunión de Trabajo</code></td></tr>
+          <tr><td><code>modalidad</code></td><td><code>Presencial</code> / <code>Virtual</code> / <code>Híbrida</code></td></tr>
+          <tr><td><code>titulo</code>, <code>fecha</code>, <code>hora</code>, <code>lugar</code></td><td>Datos básicos de la sesión</td></tr>
+          <tr><td><code>convocatoria_dias</code></td><td>Días mínimos de aviso: 5 (Asamblea), 2 (Consejo), 0 (trabajo)</td></tr>
+          <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code></td></tr>
+          <tr><td><code>quorum_regla</code></td><td>Cita libre de la regla del estatuto aplicable</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="dim">Criterio sugerido de modalidad: si la reunión requiere firma física, votación formal amplia o es la Asamblea Anual → mejor <strong>presencial</strong>. Coordinaciones ágiles de una Dirección → <strong>virtual</strong> casi siempre funciona mejor.</p>
+  </div>
+
+  <div class="card">
+    <h2>¿Cómo confirmo mi asistencia?</h2>
+    <p>Haz clic en <strong>"Confirmar asistencia"</strong> en la reunión que corresponda — te llevará a un formulario corto. Tus respuestas alimentan el contador de quórum de esta página en tiempo real (puede tardar 1-2 minutos en actualizarse).</p>
+  </div>
+
+  <footer class="site">
+    El quórum se calcula según lo definido en el <a href="convocatorias.html">Estatuto</a> · Roles y total de titulares en <code>/data/roles.csv</code> · Tareas escaladas desde <code>/data/tasks.csv</code>
+  </footer>
+
+</div>
+
+<script>
+let totalTitulares = 0;
+let rsvpCounts = {};
+let meetingsData = [];
+let tasksData = [];
+let currentFilter = 'todas';
+
+function categoryOf(tipo) {
+    const t = (tipo || '').toLowerCase();
+    if (t.includes('ordinaria') || t.includes('extraordinaria')) return 'asamblea';
+    if (t.includes('consejo')) return 'consejo';
+    return 'trabajo';
+}
+
+function badgeForTipo(tipo) {
+    const cat = categoryOf(tipo);
+    if (cat === 'asamblea') return 'badge-info';
+    if (cat === 'consejo') return 'badge-warn';
+    return 'badge-success';
+}
+
+function modalidadIcon(modalidad) {
+    const m = (modalidad || '').toLowerCase();
+    if (m.includes('presencial')) return '📍';
+    if (m.includes('híbrid') || m.includes('hibrid')) return '🔀';
+    return '💻';
+}
+
+function quorumRequiredCount(tipo) {
+    const t = (tipo || '').toLowerCase();
+    if (t === 'ordinaria' || t === 'extraordinaria') {
+        return Math.floor(totalTitulares / 2) + 1;
+    }
+    return null;
+}
+
+function getEscalatedTasks(target) {
+    return tasksData.filter(row => {
+        const escalar = (row.Escalar || '').trim().toLowerCase();
+        const estado = (row.Estado || '').trim().toLowerCase();
+        return escalar === target.toLowerCase() && estado !== 'completado' && estado !== 'completed';
+    });
+}
+
+function nextMeetingIdByCategory(cat) {
+    const today = new Date().toISOString().slice(0,10);
+    const upcoming = meetingsData
+        .filter(m => categoryOf(m.tipo) === cat && m.fecha >= today)
+        .sort((a,b) => a.fecha.localeCompare(b.fecha));
+    return upcoming.length ? upcoming[0].id : null;
+}
+
+function renderMeetings() {
+    const today = new Date().toISOString().slice(0,10);
+    const sorted = [...meetingsData].sort((a,b) => a.fecha.localeCompare(b.fecha));
+
+    const nextConsejoId = nextMeetingIdByCategory('consejo');
+    const nextAsambleaId = nextMeetingIdByCategory('asamblea');
+    const escaladasConsejo = getEscalatedTasks('Consejo');
+    const escaladasAsamblea = getEscalatedTasks('Asamblea');
+
+    let html = '';
+    sorted.forEach(m => {
+        const cat = categoryOf(m.tipo);
+        if (currentFilter !== 'todas' && currentFilter !== cat) return;
+
+        const isPast = m.fecha < today;
+        const agendaItems = (m.agenda || '').split('|').filter(x => x.trim() !== '');
+        const confirmed = rsvpCounts[m.id] || 0;
+        const required = quorumRequiredCount(m.tipo);
+
+        let quorumHTML = '';
+        if (required) {
+            const pct = Math.min(100, Math.round((confirmed / required) * 100));
+            const ok = confirmed >= required;
+            quorumHTML = '<div style="margin-top:10px;"><span class="dim" style="font-size:12px;">Quórum: ' + confirmed + ' / ' + required + ' titulares confirmados ' + (ok ? '✅' : '⏳') + '</span><div class="quorum-bar"><div class="quorum-bar-fill ' + (ok ? 'ok' : '') + '" style="width:' + pct + '%"></div></div></div>';
+        } else if (cat === 'consejo') {
+            quorumHTML = '<div style="margin-top:10px;"><span class="dim" style="font-size:12px;">' + confirmed + ' confirmaciones registradas · quórum: mitad + 1 de miembros del Consejo</span></div>';
+        } else {
+            quorumHTML = '<div style="margin-top:10px;"><span class="dim" style="font-size:12px;">Reunión de trabajo — no requiere quórum formal</span></div>';
+        }
+
+        let autoAgendaHTML = '';
+        if (!isPast) {
+            if (m.id === nextConsejoId && escaladasConsejo.length) {
+                autoAgendaHTML = '<div class="auto-agenda"><strong>⬆ Escalado desde Actividades</strong><ul>' + escaladasConsejo.map(t => '<li>' + t.Actividad + ' <span class="dim">(' + t.Componente + ' · ' + t.Responsable + ')</span></li>').join('') + '</ul></div>';
+            } else if (m.id === nextAsambleaId && escaladasAsamblea.length) {
+                autoAgendaHTML = '<div class="auto-agenda"><strong>⬆ Escalado desde Actividades</strong><ul>' + escaladasAsamblea.map(t => '<li>' + t.Actividad + ' <span class="dim">(' + t.Componente + ' · ' + t.Responsable + ')</span></li>').join('') + '</ul></div>';
+            }
+        }
+
+        const formLink = CONFIG.GOOGLE_FORM_URL
+            ? CONFIG.GOOGLE_FORM_URL + (CONFIG.GOOGLE_FORM_URL.includes('?') ? '&' : '?') + 'reunion=' + encodeURIComponent(m.titulo)
+            : null;
+
+        html += '<div class="meeting-card" style="' + (isPast ? 'opacity:.5;' : '') + '">'
+            + '<span class="badge ' + badgeForTipo(m.tipo) + '">' + m.tipo + '</span>'
+            + '<span class="badge badge-info" style="background:transparent; border-color:var(--border-glow); color:var(--text-dim);">' + modalidadIcon(m.modalidad) + ' ' + (m.modalidad || 'Sin definir') + '</span>'
+            + '<h3 style="margin:10px 0 4px 0;">' + m.titulo + '</h3>'
+            + '<div class="meta"><span>📅 ' + m.fecha + '</span><span>🕖 ' + m.hora + '</span><span>📍 ' + m.lugar + '</span><span>⏱️ convocatoria: ' + m.convocatoria_dias + ' días antes</span></div>'
+            + (agendaItems.length ? '<strong style="font-size:12.5px; color:var(--text-dim);">Agenda:</strong><ul class="agenda-list">' + agendaItems.map(a => '<li>' + a.trim() + '</li>').join('') + '</ul>' : '')
+            + autoAgendaHTML
+            + '<p class="dim" style="font-size:12px; margin-top:8px;"><strong>Regla de quórum:</strong> ' + m.quorum_regla + '</p>'
+            + quorumHTML
+            + (!isPast && formLink ? '<a class="btn small" style="margin-top:12px;" href="' + formLink + '" target="_blank">✅ Confirmar asistencia</a>' : '')
+            + '</div>';
+    });
+
+    document.getElementById('meetings-list').innerHTML = html || '<p class="dim">No hay reuniones que coincidan con este filtro.</p>';
+}
+
+function showConfigWarnings() {
+    let msgs = [];
+    if (!CONFIG.GOOGLE_FORM_URL) msgs.push('El botón de "Confirmar asistencia" aún no tiene un formulario configurado.');
+    if (!CONFIG.RSVP_SHEET_CSV_URL) msgs.push('El conteo de quórum en vivo aún no está conectado a una hoja de respuestas.');
+    if (msgs.length) {
+        document.getElementById('config-warning').innerHTML = '<div class="note-box">⚙️ ' + msgs.join(' ') + ' Ver instrucciones de configuración en <code>README.md</code>.</div>';
+    }
+}
+
+function loadRSVPCounts(callback) {
+    if (!CONFIG.RSVP_SHEET_CSV_URL) { callback(); return; }
+    Papa.parse(CONFIG.RSVP_SHEET_CSV_URL, {
+        download: true, header: true, skipEmptyLines: true,
+        complete: r => {
+            r.data.forEach(row => {
+                const id = (row.IDReunion || row.Reunion || '').trim();
+                const asiste = (row.Asistencia || row['¿Asistirás?'] || '').trim().toLowerCase();
+                if (id && (asiste === 'sí' || asiste === 'si' || asiste === 'yes')) {
+                    rsvpCounts[id] = (rsvpCounts[id] || 0) + 1;
+                }
+            });
+            callback();
+        },
+        error: () => callback()
+    });
+}
+
+function loadTasksThenRender() {
+    Papa.parse('data/tasks.csv', {
+        download: true, header: true, skipEmptyLines: true,
+        complete: r => { tasksData = r.data.filter(row => row.ID); renderMeetings(); },
+        error: () => { renderMeetings(); }
+    });
+}
+
+function loadMeetings() {
+    Papa.parse('data/asambleas.csv', {
+        download: true, header: true, skipEmptyLines: true,
+        complete: r => {
+            meetingsData = r.data.filter(row => row.id);
+            loadRSVPCounts(loadTasksThenRender);
+        },
+        error: () => { document.getElementById('meetings-list').innerHTML = '<p class="dim">No se pudo cargar data/asambleas.csv</p>'; }
+    });
+}
+
+function loadRolesThenMeetings() {
+    Papa.parse('data/roles.csv', {
+        download: true, header: true, skipEmptyLines: true,
+        complete: r => {
+            totalTitulares = r.data.filter(row => (row.Categoria || '').toLowerCase().includes('titular')).length;
+            loadMeetings();
+        },
+        error: () => { totalTitulares = 6; loadMeetings(); }
+    });
+}
+
+document.querySelectorAll('.type-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.type-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderMeetings();
+    });
+});
+
+showConfigWarnings();
+loadRolesThenMeetings();
+</script>
+
+</body>
+</html>
