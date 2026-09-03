@@ -56,27 +56,21 @@
 
         <div class="sidebar-pane">
             <div class="card">
-                <h2>Carga de Trabajo & Contribuciones</h2>
-                <div id="dynamic-date-label" class="date-label">Calculando ciclo estelar...</div>
-
-                <div class="tabs">
-                    <button class="tab-btn active" id="tab-curr" onclick="toggleWeekView('current')">Semana Actual</button>
-                    <button class="tab-btn" id="tab-prev" onclick="toggleWeekView('previous')">Semana Anterior</button>
-                </div>
-
-                <div id="panel-current" class="week-content active">
-                    <div id="current-metrics-list"></div>
-                </div>
-
-                <div id="panel-previous" class="week-content">
-                    <div id="previous-metrics-list"></div>
-                </div>
+                <h2>Carga de Trabajo</h2>
+                <p class="dim" style="font-size:12.5px; margin-top:-8px;">Total acumulado a la fecha — no es de una semana en particular.</p>
+                <div id="current-metrics-list"></div>
 
                 <button class="export-btn" onclick="exportContributionReport()">
                     📥 Exportar Reporte de Contribuciones (CSV)
                 </button>
             </div>
         </div>
+    </div>
+
+    <div class="card">
+        <h2>📈 Avance semanal del equipo</h2>
+        <p class="dim">Se arma solo a partir de la <strong>Fecha Límite</strong> de las actividades marcadas como Completado en <code>data/tasks.csv</code> — nadie necesita llevar un registro aparte semana a semana. Si alguien reporta un avance por el formulario de bitácora en vez de editar el CSV directamente, aparece aquí recién cuando ese avance se traslada al archivo.</p>
+        <div id="weekly-chart"><p class="dim">Cargando...</p></div>
     </div>
 
     <footer class="site">
@@ -88,33 +82,12 @@
     const teamList = ["Sebastian", "Fernando", "Jose", "Josue", "Luis", "Esteban", "Juan Diego"];
     let globalMetrics = {};
 
-    function initDynamicDates() {
-        const today = new Date();
-        const currentDay = today.getDay();
-        const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + distanceToMonday);
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
-        const options = { day: '2-digit', month: 'short' };
-        const labelText = `Ciclo Actual: ${monday.toLocaleDateString('es-ES', options)} - ${sunday.toLocaleDateString('es-ES', options)} ${sunday.getFullYear()}`;
-        document.getElementById('dynamic-date-label').innerText = labelText;
-        return { monday: monday, sunday: sunday };
-    }
-
     function processCSVMetrics(data) {
-        const dateRange = initDynamicDates();
-        const prevMonday = new Date(dateRange.monday);
-        prevMonday.setDate(dateRange.monday.getDate() - 7);
-        const prevSunday = new Date(dateRange.monday);
-        prevSunday.setDate(dateRange.monday.getDate() - 1);
-
-        teamList.forEach(member => { globalMetrics[member] = { active: 0, completed: 0, completedPrevious: 0 }; });
+        teamList.forEach(member => { globalMetrics[member] = { active: 0, completed: 0 }; });
 
         data.forEach(row => {
             const resp = row.Responsable ? row.Responsable.trim() : "";
             const status = row.Estado ? row.Estado.trim().toLowerCase() : "";
-            const deadlineStr = row['Fecha Límite'] ? row['Fecha Límite'].trim() : "";
 
             if (globalMetrics[resp]) {
                 const isComp = (status === "completado" || status === "completed" || status === "finalizado");
@@ -122,12 +95,6 @@
 
                 if (isComp) {
                     globalMetrics[resp].completed += 1;
-                    if (deadlineStr) {
-                        const deadlineDate = new Date(deadlineStr + "T00:00:00");
-                        if (deadlineDate >= prevMonday && deadlineDate <= prevSunday) {
-                            globalMetrics[resp].completedPrevious += 1;
-                        }
-                    }
                 } else if (isActive) {
                     globalMetrics[resp].active += 1;
                 }
@@ -135,62 +102,95 @@
         });
 
         renderMetricsDashboard();
+        renderWeeklyChart(computeWeeklyCompletions(data));
+    }
+
+    // Agrupa las actividades Completado por la semana (lunes) de su Fecha Límite.
+    // No requiere ningún archivo ni registro aparte: se recalcula solo desde tasks.csv.
+    function mondayOf(dateStr) {
+        const d = new Date(dateStr + "T00:00:00");
+        const day = d.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diff);
+        return d;
+    }
+
+    function computeWeeklyCompletions(data) {
+        const weekMap = {};
+        data.forEach(row => {
+            const status = (row.Estado || "").trim().toLowerCase();
+            const deadlineStr = row['Fecha Límite'] ? row['Fecha Límite'].trim() : "";
+            const isComp = (status === "completado" || status === "completed" || status === "finalizado");
+            if (isComp && deadlineStr) {
+                const monday = mondayOf(deadlineStr);
+                const key = monday.toISOString().slice(0, 10);
+                weekMap[key] = (weekMap[key] || 0) + 1;
+            }
+        });
+        return Object.keys(weekMap).sort().map(key => {
+            const monday = new Date(key + "T00:00:00");
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            const opts = { day: '2-digit', month: 'short' };
+            return {
+                key,
+                label: `${monday.toLocaleDateString('es-ES', opts)} – ${sunday.toLocaleDateString('es-ES', opts)}`,
+                count: weekMap[key]
+            };
+        });
+    }
+
+    function renderWeeklyChart(weeks) {
+        const target = document.getElementById('weekly-chart');
+        if (!weeks.length) {
+            target.innerHTML = '<p class="dim">Todavía no hay actividades completadas con fecha límite para graficar.</p>';
+            return;
+        }
+        const recent = weeks.slice(-10);
+        const max = Math.max(...recent.map(w => w.count));
+        let html = '';
+        recent.forEach(w => {
+            const pct = Math.max(6, Math.round((w.count / max) * 100));
+            html += `
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+                    <div style="width:130px; font-size:12px; color:var(--ink-dim); flex-shrink:0;">${w.label}</div>
+                    <div style="flex:1; background:var(--bg-inset); border:1px solid var(--border); border-radius:6px; overflow:hidden;">
+                        <div style="width:${pct}%; background:var(--accent); padding:6px 10px; color:#fff; font-size:12px; font-weight:600; border-radius:6px 0 0 6px; min-width:28px; text-align:right;">${w.count}</div>
+                    </div>
+                </div>`;
+        });
+        target.innerHTML = html;
     }
 
     function renderMetricsDashboard() {
         let currentHTML = "";
-        let previousHTML = "";
 
         teamList.forEach(member => {
             const activeCount = globalMetrics[member].active;
             const completedCount = globalMetrics[member].completed;
-            const prevClosedCount = globalMetrics[member].completedPrevious;
-
-            const isInactiveCurrent = (activeCount === 0 && completedCount === 0);
-            const isInactivePrevious = (prevClosedCount === 0);
+            const isInactive = (activeCount === 0 && completedCount === 0);
 
             currentHTML += `
-                <div class="member-metrics-row ${isInactiveCurrent ? 'inactive-member' : ''}">
+                <div class="member-metrics-row ${isInactive ? 'inactive-member' : ''}">
                     <div class="member-name-tag">${member}</div>
                     <div class="metric-counter active-tasks">${activeCount} Activas</div>
                     <div class="metric-counter completed-tasks">${completedCount} Logradas</div>
                 </div>`;
-
-            previousHTML += `
-                <div class="member-metrics-row ${isInactivePrevious ? 'inactive-member' : ''}">
-                    <div class="member-name-tag">${member}</div>
-                    <div class="metric-counter active-tasks" style="opacity:0.5;">-- Terminado</div>
-                    <div class="metric-counter completed-tasks">${prevClosedCount} Cerradas</div>
-                </div>`;
         });
 
         document.getElementById('current-metrics-list').innerHTML = currentHTML;
-        document.getElementById('previous-metrics-list').innerHTML = previousHTML;
-    }
-
-    function toggleWeekView(week) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.week-content').forEach(c => c.classList.remove('active'));
-        if (week === 'current') {
-            document.getElementById('tab-curr').classList.add('active');
-            document.getElementById('panel-current').classList.add('active');
-        } else {
-            document.getElementById('tab-prev').classList.add('active');
-            document.getElementById('panel-previous').classList.add('active');
-        }
     }
 
     function exportContributionReport() {
         let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Miembro,Actividades Activas,Actividades Completadas,Cerradas Semana Anterior,Nivel de Contribucion\n";
+        csvContent += "Miembro,Actividades Activas,Actividades Completadas,Nivel de Contribucion\n";
         teamList.forEach(member => {
             const act = globalMetrics[member].active;
             const comp = globalMetrics[member].completed;
-            const prev = globalMetrics[member].completedPrevious;
             let level = "Estable";
-            if (comp > 2 || prev > 1) level = "Alto Impacto";
+            if (comp > 3) level = "Alto Impacto";
             if (act === 0 && comp === 0) level = "Inactivo";
-            csvContent += `"${member}",${act},${comp},${prev},"${level}"\n`;
+            csvContent += `"${member}",${act},${comp},"${level}"\n`;
         });
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
