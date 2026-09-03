@@ -253,6 +253,17 @@ tr:hover td { background-color: var(--bg-inset); }
 .flow-decision .flow-sub { display: block; font-size: 10.5px; font-weight: 500; color: var(--ink-dim); margin-top: 5px; }
 
 .flow-note { text-align: center; max-width: 62ch; margin: 4px auto 0 auto; color: var(--ink-dim); font-size: 14px; }
+
+/* Mini-índice de anclas (páginas largas) */
+.quicknav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 20px 0; }
+.quicknav a { text-decoration: none; font-size: 12px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 6px 12px; border-radius: 20px; }
+.quicknav a:hover { background: var(--accent); color: #fff; }
+
+/* Aviso de próxima reunión (index.html) */
+.next-meeting-banner { background: var(--accent-soft); border: 1px solid #E0C4A8; border-radius: var(--radius); padding: 18px 24px; margin-bottom: 20px; text-align: center; }
+.next-meeting-banner .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); font-weight: 700; }
+.next-meeting-banner h3 { margin: 6px 0; font-family: 'Source Serif 4', serif; font-size: 18px; color: var(--ink); }
+.next-meeting-banner .meta { font-size: 13px; color: var(--ink-dim); }
 @media (max-width: 760px) {
     .flow-wrap { flex-direction: column; align-items: center; }
     .flow-arrow { transform: rotate(90deg); }
