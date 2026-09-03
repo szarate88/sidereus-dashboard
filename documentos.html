@@ -46,13 +46,41 @@
     </div>
   </div>
 
+  <!-- ================= CONFIG ================= -->
+  <!-- Pega aquí el ID de la carpeta de Drive de actas (ver README.md para cómo crearla y obtener el ID) -->
+  <script>
+    const CONFIG = {
+      DRIVE_ACTAS_FOLDER_ID: "1EPSOUnSbQ2eApG3oyCH2RI1q4sS_3y__"   // ej: "1AbCdEfGhIjKlMnOpQrStUvWxYz"
+    };
+  </script>
+  <!-- ============================================ -->
+
   <div class="card">
-    <h2>Actas y otros documentos</h2>
-    <p>Sube aquí las actas de Asamblea y de Consejo Directivo a medida que se generen, en la carpeta <code>/docs/actas/</code>. Sugerencia de nombre de archivo: <code>AAAA-MM-DD_tipo-de-reunion.pdf</code> (ej. <code>2026-10-24_asamblea-ordinaria.pdf</code>).</p>
+    <h2>📼 Actas de Asamblea y Consejo Directivo</h2>
+    <p>El Secretario General sube aquí las actas directamente a esta carpeta compartida de <strong>Google Drive</strong> — arrastra el PDF y listo, no hace falta usar GitHub ni CSV.</p>
+    <div id="drive-warning"></div>
+    <p style="text-align:center; margin:16px 0;">
+      <a class="btn gold" id="drive-open-btn" href="#" target="_blank">📁 Abrir carpeta de actas en Drive</a>
+    </p>
+    <div id="drive-embed-wrapper" style="border:1px solid var(--border); border-radius:10px; overflow:hidden;"></div>
     <div class="note-box">
-      El Secretario General es responsable de mantener actualizado el libro de actas (Art. 34) — este repositorio puede ser su copia digital de respaldo, no reemplaza el libro físico/legalizado que exige el estatuto (Art. 12 y 30).
+      El Secretario General es responsable de mantener actualizado el libro de actas (Art. 34) — esta carpeta de Drive puede ser su copia digital de respaldo, no reemplaza el libro físico/legalizado que exige el estatuto (Art. 12 y 30).
     </div>
+    <p class="dim">Sugerencia (no obligatoria) para nombrar los archivos: <code>AAAA-MM-DD_tipo-de-reunion.pdf</code>, ej. <code>2026-10-24_asamblea-ordinaria.pdf</code> — ayuda a encontrarlos rápido, pero cualquier nombre funciona.</p>
   </div>
+
+  <script>
+    if (CONFIG.DRIVE_ACTAS_FOLDER_ID) {
+      document.getElementById('drive-open-btn').href = 'https://drive.google.com/drive/folders/' + CONFIG.DRIVE_ACTAS_FOLDER_ID;
+      document.getElementById('drive-embed-wrapper').innerHTML =
+        '<iframe src="https://drive.google.com/embeddedfolderview?id=' + CONFIG.DRIVE_ACTAS_FOLDER_ID + '#list" style="width:100%; height:420px; border:none;"></iframe>';
+    } else {
+      document.getElementById('drive-open-btn').style.opacity = '0.5';
+      document.getElementById('drive-open-btn').style.pointerEvents = 'none';
+      document.getElementById('drive-warning').innerHTML =
+        '<div class="note-box">⚙️ Todavía no está conectada la carpeta de Drive. Ver instrucciones en <code>README.md</code>.</div>';
+    }
+  </script>
 
   <footer class="site">
     ¿Falta un documento? Agrégalo a <code>/docs/</code> y enlázalo aquí.
