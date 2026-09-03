@@ -6,15 +6,6 @@
 <title>Asambleas y RSVP — Sidereus Nuncius</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="css/styles.css">
-<style>
-  .type-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-  .type-tab { background: var(--bg-space); border: 1px solid var(--border-glow); color: var(--text-dim); padding: 8px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
-  .type-tab.active { background: var(--starlight); color: var(--bg-space); border-color: var(--starlight); }
-  .auto-agenda { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.06); border: 1px dashed rgba(239, 68, 68, 0.35); }
-  .auto-agenda strong { color: var(--danger); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-  .auto-agenda ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 12.5px; }
-  .auto-agenda li span.dim { font-size: 11px; }
-</style>
 </head>
 <body>
 <div class="container">
@@ -193,10 +184,10 @@ function renderMeetings() {
 
         html += '<div class="meeting-card" style="' + (isPast ? 'opacity:.5;' : '') + '">'
             + '<span class="badge ' + badgeForTipo(m.tipo) + '">' + m.tipo + '</span>'
-            + '<span class="badge badge-info" style="background:transparent; border-color:var(--border-glow); color:var(--text-dim);">' + modalidadIcon(m.modalidad) + ' ' + (m.modalidad || 'Sin definir') + '</span>'
+            + '<span class="badge" style="background:var(--bg-card); border:1px solid var(--border); color:var(--ink-dim);">' + modalidadIcon(m.modalidad) + ' ' + (m.modalidad || 'Sin definir') + '</span>'
             + '<h3 style="margin:10px 0 4px 0;">' + m.titulo + '</h3>'
             + '<div class="meta"><span>📅 ' + m.fecha + '</span><span>🕖 ' + m.hora + '</span><span>📍 ' + m.lugar + '</span><span>⏱️ convocatoria: ' + m.convocatoria_dias + ' días antes</span></div>'
-            + (agendaItems.length ? '<strong style="font-size:12.5px; color:var(--text-dim);">Agenda:</strong><ul class="agenda-list">' + agendaItems.map(a => '<li>' + a.trim() + '</li>').join('') + '</ul>' : '')
+            + (agendaItems.length ? '<strong style="font-size:12.5px; color:var(--ink-dim);">Agenda:</strong><ul class="agenda-list">' + agendaItems.map(a => '<li>' + a.trim() + '</li>').join('') + '</ul>' : '')
             + autoAgendaHTML
             + '<p class="dim" style="font-size:12px; margin-top:8px;"><strong>Regla de quórum:</strong> ' + m.quorum_regla + '</p>'
             + quorumHTML
