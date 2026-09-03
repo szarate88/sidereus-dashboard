@@ -30,10 +30,10 @@
   <!-- Edita estos dos valores cuando armes tu Google Form + Google Sheet (ver README.md) -->
   <script>
     const CONFIG = {
-      GOOGLE_FORM_URL: "",              // Formulario para CONFIRMAR ASISTENCIA — ej: "https://forms.gle/xxxxxxx"
-      RSVP_SHEET_CSV_URL: "",           // Hoja de respuestas del formulario de asistencia, publicada como CSV
-      PROPOSE_MEETING_FORM_URL: "",     // Formulario para PROPONER una reunión nueva — ej: "https://forms.gle/yyyyyyy"
-      BITACORA_FORM_URL: ""             // Formulario para registrar notas/avances sin tocar el CSV — ej: "https://forms.gle/zzzzzzz"
+      GOOGLE_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSctjw4wNy7nPPL92YrQis3nk-LcxkkkOJDCbsWmw5NrlpEEbw/viewform",              // Formulario para CONFIRMAR ASISTENCIA
+      RSVP_SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS0X0mzn9u5_h1r0GOkKzuAIzs6SSHuLFRXe99-t3D9L_2g3QpwooqBS5DmEZQpPJXuOeJg2KctZH9R/pub?gid=1026025331&single=true&output=csv",           // Hoja de respuestas del formulario de asistencia, publicada como CSV
+      PROPOSE_MEETING_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf7JR9KDFSHLyc0zickbPZAcjPFTfmUQwDyX_otjlBSRkznBg/viewform",     // Formulario para PROPONER una reunión nueva
+      BITACORA_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf3DanrD1ricUzMurZ0v65ftbjUSKpWdd9aV3IjWc-lsHwtOQ/viewform"             // Formulario para registrar notas/avances sin tocar el CSV
     };
   </script>
   <!-- ============================================ -->
@@ -305,7 +305,7 @@ function loadRSVPCounts(callback) {
         complete: r => {
             r.data.forEach(row => {
                 const id = (row.IDReunion || row.Reunion || '').trim();
-                const asiste = (row.Asistencia || row['¿Asistirás?'] || '').trim().toLowerCase();
+                const asiste = (row.Asistencia || row.Asitencia || row['¿Asistirás?'] || '').trim().toLowerCase();
                 if (id && (asiste === 'sí' || asiste === 'si' || asiste === 'yes')) {
                     rsvpCounts[id] = (rsvpCounts[id] || 0) + 1;
                 }
