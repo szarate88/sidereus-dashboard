@@ -176,6 +176,7 @@
 
 <script>
 function badgeClass(cat) {
+    if (cat && cat.toLowerCase().includes('inactivo')) return 'badge-danger';
     if (cat && cat.toLowerCase().includes('fundador')) return 'badge-success';
     if (cat && cat.toLowerCase().includes('definir')) return 'badge-warn';
     return 'badge-info';
