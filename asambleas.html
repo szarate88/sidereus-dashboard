@@ -191,7 +191,7 @@ function renderMeetings() {
             + '<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">'
             + (!isPast && formLink ? '<a class="btn small" href="' + formLink + '" target="_blank">✅ Confirmar asistencia</a>' : '')
             + (!isPast ? '<a class="btn small gold" href="' + gcalLink + '" target="_blank">+ Google Calendar</a>' : '')
-            + '<button class="btn small" style="border-color:var(--border); color:var(--ink-dim);" onclick="downloadMeetingPDFById(\'' + m.id + '\')">📄 Descargar PDF</button>'
+            + '<button class="btn small" style="background:var(--bg-card); border:1px solid var(--border-strong); color:var(--ink);" onclick="downloadMeetingPDFById(\'' + m.id + '\')">📄 Descargar PDF</button>'
             + '</div>'
             + '</div>';
     });
