@@ -186,7 +186,7 @@ function renderMeetings() {
 
         const isPast = m.fecha < today;
         const agendaItems = (m.agenda || '').split('|').filter(x => x.trim() !== '');
-        const confirmed = rsvpCounts[m.id] || 0;
+        const confirmed = rsvpCounts[m.titulo] || rsvpCounts[m.id] || 0;
         const required = quorumRequiredCount(m.tipo);
 
         let quorumHTML = '';
