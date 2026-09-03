@@ -32,8 +32,7 @@
     const CONFIG = {
       GOOGLE_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSctjw4wNy7nPPL92YrQis3nk-LcxkkkOJDCbsWmw5NrlpEEbw/viewform",              // Formulario para CONFIRMAR ASISTENCIA
       RSVP_SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS0X0mzn9u5_h1r0GOkKzuAIzs6SSHuLFRXe99-t3D9L_2g3QpwooqBS5DmEZQpPJXuOeJg2KctZH9R/pub?gid=1026025331&single=true&output=csv",           // Hoja de respuestas del formulario de asistencia, publicada como CSV
-      PROPOSE_MEETING_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf7JR9KDFSHLyc0zickbPZAcjPFTfmUQwDyX_otjlBSRkznBg/viewform",     // Formulario para PROPONER una reunión nueva
-      BITACORA_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf3DanrD1ricUzMurZ0v65ftbjUSKpWdd9aV3IjWc-lsHwtOQ/viewform"             // Formulario para registrar notas/avances sin tocar el CSV
+      PROPOSE_MEETING_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSf7JR9KDFSHLyc0zickbPZAcjPFTfmUQwDyX_otjlBSRkznBg/viewform"     // Formulario para PROPONER una reunión nueva
     };
   </script>
   <!-- ============================================ -->
@@ -66,21 +65,6 @@
     <div id="propose-form-warning"></div>
     <p style="text-align:center; margin-top:18px;">
       <a class="btn gold" id="propose-meeting-btn" href="#" target="_blank">➕ Proponer una reunión</a>
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>✅ Confirmar asistencia</h2>
-    <p>Haz clic en <strong>"Confirmar asistencia"</strong> dentro de la reunión que corresponda — es un formulario de un solo paso. Tus respuestas alimentan el contador de quórum de esta página en tiempo real (puede demorar 1-2 minutos en actualizarse).</p>
-    <p>También puedes darle a <strong>"+ Google Calendar"</strong> en cualquier reunión para guardarla directo en tu calendario personal, con fecha, hora y lugar ya cargados.</p>
-  </div>
-
-  <div class="card">
-    <h2>📝 Registrar notas o avances</h2>
-    <p>Si estás en una reunión tomando notas, marcando qué se decidió, o dando seguimiento a una tarea, <strong>no necesitas editar ningún archivo</strong> — eso es solo para quien administra el sitio. Usa este formulario y esa información se traduce después al calendario, a las actas o a las actividades.</p>
-    <div id="bitacora-warning"></div>
-    <p style="text-align:center; margin-top:18px;">
-      <a class="btn gold" id="bitacora-btn" href="#" target="_blank">📝 Registrar nota o avance</a>
     </p>
   </div>
 
@@ -264,16 +248,6 @@ function showConfigWarnings() {
         proposeBtn.style.pointerEvents = 'none';
         document.getElementById('propose-form-warning').innerHTML =
             '<div class="note-box">⚙️ El formulario para proponer reuniones aún no está configurado. Ver <code>README.md</code>.</div>';
-    }
-
-    const bitacoraBtn = document.getElementById('bitacora-btn');
-    if (CONFIG.BITACORA_FORM_URL) {
-        bitacoraBtn.href = CONFIG.BITACORA_FORM_URL;
-    } else {
-        bitacoraBtn.style.opacity = '0.5';
-        bitacoraBtn.style.pointerEvents = 'none';
-        document.getElementById('bitacora-warning').innerHTML =
-            '<div class="note-box">⚙️ El formulario de notas/avances aún no está configurado. Ver <code>README.md</code>.</div>';
     }
 }
 
