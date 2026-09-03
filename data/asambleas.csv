@@ -1,5 +1,5 @@
 id,tipo,modalidad,titulo,fecha,hora,lugar,convocatoria_dias,agenda,quorum_regla,estado_fecha
-A1,Extraordinaria,Presencial,Asamblea General Extraordinaria,2026-09-12,16:00 - 19:00,Por definir (presencial),5,,"Más de la mitad de titulares hábiles en 1ra convocatoria (Art. 24) — sube a 2/3 solo si el tema toca el estatuto o disolución (Art. 25)",Confirmada
+A1,Extraordinaria,Presencial,Asamblea General Extraordinaria,2026-09-12,16:00 - 19:00,"Calle Simoni 151, San Borja",5,,"Más de la mitad de titulares hábiles en 1ra convocatoria (Art. 24) — sube a 2/3 solo si el tema toca el estatuto o disolución (Art. 25)",Confirmada
 C1,Consejo Directivo,Virtual,Sesión Consejo Directivo — Septiembre,2026-09-19,19:00,Virtual (Meet),2,,Mitad más uno de los miembros del Consejo,Tentativa
 T1,Reunión de Trabajo,Virtual,Coordinación general de Direcciones,2026-09-26,18:30,Virtual (Meet),0,,No aplica (informal),Tentativa
 T2,Reunión de Trabajo,Virtual,Coordinación Dirección de Comunicaciones,2026-10-10,18:30,Virtual (Meet),0,,No aplica (informal),Tentativa
