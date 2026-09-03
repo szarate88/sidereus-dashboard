@@ -1,0 +1,9 @@
+id,tipo,modalidad,titulo,fecha,hora,lugar,convocatoria_dias,agenda,quorum_regla
+A1,Ordinaria,Presencial,Asamblea General Ordinaria Anual 2026,2026-10-24,19:00,Sede La Molina,5,Aprobación de memoria anual|Balance y cuentas del ejercicio|Plan de actividades 2027|Renovación parcial de cargos si corresponde,Más de la mitad de titulares hábiles en 1ra convocatoria
+A2,Extraordinaria,Virtual,Asamblea Extraordinaria — Ajuste de Plan Encuentro CTS 2026,2026-09-20,19:00,Virtual (Meet),5,Aprobar presupuesto adicional para el Encuentro CTS 2026|Autorizar firma de convenio con aliado externo,2/3 de titulares hábiles en 1ra convocatoria (o mayoría absoluta si se modifica el estatuto)
+C1,Consejo Directivo,Virtual,Sesión Ordinaria Consejo Directivo Q3,2026-09-12,19:00,Virtual (Meet),2,Revisión de avances por Dirección|Aprobación de gastos pendientes,Mitad más uno de los miembros del Consejo
+C2,Consejo Directivo,Virtual,Sesión Ordinaria Consejo Directivo Q4,2026-10-03,19:00,Virtual (Meet),2,Revisión de avances por Dirección|Preparación de agenda para Asamblea Anual,Mitad más uno de los miembros del Consejo
+C3,Consejo Directivo,Presencial,Sesión Ordinaria Consejo Directivo Q1 2027,2027-01-09,19:00,Sede La Molina,2,Revisión de plan anual 2027|Presupuesto del año,Mitad más uno de los miembros del Consejo
+T1,Reunión de Trabajo,Virtual,Coordinación Dirección de Comunicaciones,2026-09-10,18:30,Virtual (Meet),0,Calendario editorial del mes|Difusión del lanzamiento de la Red CTS Perú,No aplica (informal)
+T2,Reunión de Trabajo,Virtual,Coordinación Investigación e Incidencia,2026-09-17,18:30,Virtual (Meet),0,Estado del manuscrito vicuña|Próximos pasos ReLAC 2040,No aplica (informal)
+T3,Reunión de Trabajo,Presencial,Coordinación Encuentro CTS 2026 (equipo logística),2026-09-24,17:00,Sede La Molina,0,Revisión de mesas y ponentes confirmados|Estado de voluntariado,No aplica (informal)
