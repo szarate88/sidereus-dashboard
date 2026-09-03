@@ -44,6 +44,9 @@
 
   <div class="card">
     <h2>Próximas reuniones</h2>
+    <div class="note-box">
+      〜 Este calendario es un <strong>borrador tentativo</strong> para lo que queda de 2026 — solo la <strong>Asamblea Extraordinaria del 12 de septiembre</strong> tiene fecha confirmada (marcada con ✓). Las demás fechas, y sus agendas, se van a ir ajustando; edítalas en <code>data/asambleas.csv</code> a medida que se confirmen.
+    </div>
 
     <div class="type-tabs">
       <button class="type-tab active" data-filter="todas">Todas</button>
@@ -67,8 +70,9 @@
           <tr><td><code>modalidad</code></td><td><code>Presencial</code> / <code>Virtual</code> / <code>Híbrida</code></td></tr>
           <tr><td><code>titulo</code>, <code>fecha</code>, <code>hora</code>, <code>lugar</code></td><td>Datos básicos de la sesión</td></tr>
           <tr><td><code>convocatoria_dias</code></td><td>Días mínimos de aviso: 5 (Asamblea), 2 (Consejo), 0 (trabajo)</td></tr>
-          <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code></td></tr>
+          <tr><td><code>agenda</code></td><td>Puntos separados por <code>|</code> — déjalo vacío mientras la reunión sea tentativa</td></tr>
           <tr><td><code>quorum_regla</code></td><td>Cita libre de la regla del estatuto aplicable</td></tr>
+          <tr><td><code>estado_fecha</code></td><td><code>Confirmada</code> o <code>Tentativa</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -112,6 +116,13 @@ function modalidadIcon(modalidad) {
     if (m.includes('presencial')) return '📍';
     if (m.includes('híbrid') || m.includes('hibrid')) return '🔀';
     return '💻';
+}
+
+function estadoFechaBadge(estado) {
+    const e = (estado || '').trim().toLowerCase();
+    if (e === 'confirmada') return '<span class="badge badge-success">✓ Fecha confirmada</span>';
+    if (e === 'tentativa') return '<span class="badge badge-warn">〜 Fecha tentativa</span>';
+    return '';
 }
 
 function quorumRequiredCount(tipo) {
@@ -184,6 +195,7 @@ function renderMeetings() {
         html += '<div class="meeting-card" style="' + (isPast ? 'opacity:.5;' : '') + '">'
             + '<span class="badge ' + badgeForTipo(m.tipo) + '">' + m.tipo + '</span>'
             + '<span class="badge" style="background:var(--bg-card); border:1px solid var(--border); color:var(--ink-dim);">' + modalidadIcon(m.modalidad) + ' ' + (m.modalidad || 'Sin definir') + '</span>'
+            + estadoFechaBadge(m.estado_fecha)
             + '<h3 style="margin:10px 0 4px 0;">' + m.titulo + '</h3>'
             + '<div class="meta"><span>📅 ' + m.fecha + '</span><span>🕖 ' + m.hora + '</span><span>📍 ' + m.lugar + '</span><span>⏱️ convocatoria: ' + m.convocatoria_dias + ' días antes</span></div>'
             + (agendaItems.length ? '<strong style="font-size:12.5px; color:var(--ink-dim);">Agenda:</strong><ul class="agenda-list">' + agendaItems.map(a => '<li>' + a.trim() + '</li>').join('') + '</ul>' : '')

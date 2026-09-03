@@ -34,6 +34,7 @@ Edita `data/asambleas.csv`. Columnas:
 | `convocatoria_dias` | Días mínimos de anticipación según estatuto (5 para Asamblea, 2 para Consejo, 0 para trabajo) |
 | `agenda` | Puntos de agenda separados por `\|` (barra vertical) |
 | `quorum_regla` | Texto libre citando la regla aplicable del estatuto |
+| `estado_fecha` | `Confirmada` o `Tentativa` — controla si se muestra el badge ✓ o 〜 en la tarjeta |
 
 El sitio calcula automáticamente cuántos titulares hacen falta para el quórum de Asambleas (más de la mitad del total de titulares en `data/roles.csv`). Las frecuencias mínimas del estatuto (1 Asamblea/año, Consejo cada 3 meses) **no limitan** cuántas filas puedes agregar — pueden programarse tantas sesiones extraordinarias y reuniones de trabajo como se necesiten. En `asambleas.html` se pueden filtrar por tipo (Asambleas / Consejo Directivo / Reuniones de Trabajo) para diferenciarlas de un vistazo.
 

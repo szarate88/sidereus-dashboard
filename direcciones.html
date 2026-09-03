@@ -112,14 +112,45 @@
   </div>
 
   <div class="card">
-    <h2>Cómo fluye una decisión</h2>
-    <div class="meeting-card">
-      <strong>1. Reunión de trabajo</strong> (Dirección o equipo) — se discute y avanza, sin quórum formal.
-      <br><strong>2. ¿Necesita efecto institucional?</strong> (gasto, alianza, nuevo miembro, contrato) →
-      <br><strong>3. Consejo Directivo</strong> — sesiona cada 3 meses (o extraordinaria con 48h de aviso). Decide por mayoría de asistentes.
-      <br><strong>4. ¿Excede las facultades del Consejo o toca el estatuto?</strong> →
-      <br><strong>5. Asamblea General</strong> — única instancia para modificar el estatuto, disolver la asociación, o lo que el estatuto le reserve expresamente.
+    <h2 style="text-align:center; border-bottom:none;">Cómo fluye una decisión</h2>
+
+    <div class="flow-wrap">
+      <div class="flow-step">
+        <span class="flow-icon">🛠️</span>
+        <h4>Reunión de trabajo</h4>
+        <div class="flow-row">Dirección o equipo, se discute y avanza</div>
+        <div class="flow-row">Sin quórum formal</div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-decision">¿Necesita efecto institucional?<span class="flow-sub">gasto, alianza, nuevo miembro, contrato</span></div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-step">
+        <span class="flow-icon">🧭</span>
+        <h4>Consejo Directivo</h4>
+        <div class="flow-row">Sesiona cada 3 meses, o extraordinaria con 48h de aviso</div>
+        <div class="flow-row">Decide por mayoría de asistentes</div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-decision">¿Excede las facultades del Consejo, o toca el estatuto?</div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-step">
+        <span class="flow-icon">🏛️</span>
+        <h4>Asamblea General</h4>
+        <div class="flow-row">Única instancia para modificar el estatuto</div>
+        <div class="flow-row">O para disolver la asociación</div>
+      </div>
     </div>
+
+    <p class="flow-note">Si la respuesta a cualquiera de las preguntas es "No", el asunto se resuelve ahí mismo — no necesita subir de nivel.</p>
+
     <div class="note-box">
       🔗 En la práctica: marca una fila de <code>data/tasks.csv</code> con <code>Escalar = Consejo</code> o <code>Escalar = Asamblea</code> cuando una actividad se estanque o necesite decisión institucional. Aparecerá automáticamente en la agenda de la <strong>próxima sesión correspondiente</strong> en <a href="asambleas.html">Asambleas y RSVP</a> — así nadie pierde de vista los pendientes reales, sin llenar la Asamblea de tareas operativas.
     </div>
